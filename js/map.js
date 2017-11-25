@@ -89,8 +89,8 @@ var createObjAuthor = function (objAuthor, avatarNumber) {
 //  dy = y + 40 + 18
 var createObjLocation = function (objLocation) {
   return objLocation = {
-    x: getRandomInt(MAP_PIN_X_MIN, MAP_PIN_X_MAX) + 20,
-    y: getRandomInt(MAP_PIN_Y_MIN, MAP_PIN_Y_MAX) + 40 + 18
+    x: getRandomInt(MAP_PIN_X_MIN - 20, MAP_PIN_X_MAX - 20) + 20,
+    y: getRandomInt(MAP_PIN_Y_MIN - 40 - 18, MAP_PIN_Y_MAX + 48 + 18) + 40 + 18
   };
 };
 
