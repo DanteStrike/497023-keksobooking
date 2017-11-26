@@ -165,12 +165,12 @@ var buildMapPinNode = function (mapPin) {
 //  Функция создает фрагмент с DOM элементами шаблона (template) '.map__pin', согласно массиву объектов mapPins
 //  mapPins (object) - массив объектов
 //  return fragment (object) - вернуть собранный фрагмент
-var createMapPinsNode = function (mapPins) {
+var createMapPinsNode = function (arrayMapPins) {
   var fragment = document.createDocumentFragment();
   var i;
 
-  for (i = 0; i < mapPins.length; i++) {
-    fragment.appendChild(buildMapPinNode(mapPins[i]));
+  for (i = 0; i < arrayMapPins.length; i++) {
+    fragment.appendChild(buildMapPinNode(arrayMapPins[i]));
   }
 
   return fragment;
@@ -220,11 +220,11 @@ var buildMapCard = function (mapPin) {
   mapCardNodeTitle.textContent = mapPin.offer.title;
   mapCardNodeAddress.textContent = mapPin.offer.address;
   mapCardNodePrice.textContent = mapPin.offer.price + '	\u20BD/ночь';
-  mapCardNodeType.textContent =  mapPin.offer.type;
-  mapCardNodeRoomsGuests.textContent =  mapPin.offer.rooms + ' комнаты для ' + mapPin.offer.guests + ' гостей';
+  mapCardNodeType.textContent = mapPin.offer.type;
+  mapCardNodeRoomsGuests.textContent = mapPin.offer.rooms + ' комнаты для ' + mapPin.offer.guests + ' гостей';
   mapCardNodeCheckInOut.textContent = 'Заезд после ' + mapPin.offer.checkin + ', выезд до ' + mapPin.offer.checkout;
-  mapCardNodeFeatures =  buildMapCardFeatures(mapCardNodeFeatures, mapPin.offer.features);
-  mapCardNodeDescription.textContent =  mapPin.offer.description;
+  mapCardNodeFeatures = buildMapCardFeatures(mapCardNodeFeatures, mapPin.offer.features);
+  mapCardNodeDescription.textContent = mapPin.offer.description;
 
   return mapCardNode;
 };
@@ -232,13 +232,13 @@ var buildMapCard = function (mapPin) {
 //  Функция создает элемент DIV с DOM элементами шаблона (template) 'article.map__card', согласно массиву объектов mapPins
 //  mapPins (object) - массив объектов
 //  return divNode (object) - вернуть собранный элемент DIV
-var createMapCards = function (mapPins) {
+var createMapCards = function (arrayMapPins) {
   var divNode = document.createElement('div');
   var i;
 
   divNode.className = 'map__cards';
-  for (i = 0; i < mapPins.length; i++) {
-    divNode.appendChild(buildMapCard(mapPins[i]));
+  for (i = 0; i < arrayMapPins.length; i++) {
+    divNode.appendChild(buildMapCard(arrayMapPins[i]));
   }
 
   return divNode;
