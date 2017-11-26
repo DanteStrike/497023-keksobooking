@@ -40,9 +40,8 @@ var getRandomInt = function (min, max) {
 };
 
 //  Функция случайным образом сравнивает поступающие данные
-//  a, b (int)
 //  return (boolean)
-var compareRandom = function (a, b) {
+var compareRandom = function () {
   return Math.random() - 0.5;
 };
 
@@ -76,31 +75,6 @@ var generateTitelsArray = function (count) {
   return arrayTitels;
 };
 
-//  Функция собирает объект Author
-//  objAuthor (obj) - объект для заполнения
-//  avatarNumber (int) - номер картинки аватарки
-//  return objAuthor (object)
-var createObjAuthor = function (objAuthor, avatarNumber) {
-  var avatarNumberStr;
-
-  //  Согласно заданию должен быть ведущий 0. Например 01, 02 и т. д.
-  avatarNumber > 9 ? avatarNumberStr = avatarNumber.toString() : avatarNumberStr = '0' + avatarNumber.toString();
-
-  return objAuthor = {
-    avatar: 'img/avatars/user'+avatarNumberStr+'.png'
-  };
-};
-
-//  Функция собирает объект Location
-//  objLocation (obj) - объект для заполнения
-//  return objLocation (object)
-var createObjLocation = function (objLocation) {
-  return objLocation = {
-    x: getRandomInt(MAP_PIN_X_MIN, MAP_PIN_X_MAX),
-    y: getRandomInt(MAP_PIN_Y_MIN, MAP_PIN_Y_MAX)
-  };
-};
-
 //  Функция генерирует случайный массив строк (features)
 //  strArray (obj) - массив откуда выбирать
 //  return features (string) - массив строк для Offer
@@ -116,13 +90,21 @@ var getRandomOfferFeatures = function () {
   return features.sort();
 };
 
-//  Функция собирает объект Offer
-//  objOffer (obj) - пустой объект для заполнения
-//  offerTitel (string) - Название предложения
-//  objLocation (obj) - Предложение зависимо от локации
-//  return objOffer (object)
-var createObjOffer = function (objOffer, offerTitel, objLocation) {
-  return objOffer = {
+//  Функция собирает объект mapPin
+//  mapPin - сложный объект состоящий из 3-х других простых объектов (objAuthor, objOffer, objLocation)
+//  avatarNumber (int) - номер картинки аватарки
+//  offerTitel (string) - заголовок предложения
+//  return pin (obj)
+var createMapPin = function (avatarNumber, offerTitel) {
+  var mapPin;
+  var objAuthor = {
+    avatar: 'img/avatars/user0' + avatarNumber.toString() + '.png'
+  };
+  var objLocation = {
+    x: getRandomInt(MAP_PIN_X_MIN, MAP_PIN_X_MAX),
+    y: getRandomInt(MAP_PIN_Y_MIN, MAP_PIN_Y_MAX)
+  };
+  var objOffer = {
     title: offerTitel,
     address: objLocation.x + ', ' + objLocation.y,
     price: getRandomInt(OFFER_PRICE_MIN, OFFER_PRICE_MAX),
@@ -135,24 +117,16 @@ var createObjOffer = function (objOffer, offerTitel, objLocation) {
     description: [],
     photos: []
   };
-};
 
-//  Функция собирает объект mapPin
-//  mapPin - сложный объект состоящий из 3-х других простых объектов (objAuthor, objOffer, objLocation)
-//  avatarNumber (int) - номер картинки аватарки
-//  offerTitel (string) - заголовок предложения
-//  return pin (obj)
-var createMapPin = function (avatarNumber, offerTitel) {
-  var mapPin;
-  var objAuthor = createObjAuthor(objAuthor, avatarNumber);
-  var objLocation = createObjLocation(objLocation);
-  var objOffer = createObjOffer(objOffer, offerTitel, objLocation);
-
-  return mapPin = {
+  mapPin = {
     author: objAuthor,
     offer: objOffer,
     location: objLocation
   };
+
+  mapPin = mapPin;
+
+  return mapPin;
 };
 
 //  Функция генерирует массив объектов mapPin
