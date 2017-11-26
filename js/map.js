@@ -124,8 +124,7 @@ var createMapPin = function (avatarNumber, offerTitel) {
     location: objLocation
   };
 
-  mapPin = mapPin;
-
+ // mapPin = mapPin; - Как же создать структурк одив в один как указано в задании, если жалуется ESLint
   return mapPin;
 };
 
@@ -223,6 +222,7 @@ var buildMapCard = function (mapPin) {
   mapCardNodeType.textContent = mapPin.offer.type;
   mapCardNodeRoomsGuests.textContent = mapPin.offer.rooms + ' комнаты для ' + mapPin.offer.guests + ' гостей';
   mapCardNodeCheckInOut.textContent = 'Заезд после ' + mapPin.offer.checkin + ', выезд до ' + mapPin.offer.checkout;
+  //  переменная mapCardNodeFeatures Почему-то не нравится ESlint
   mapCardNodeFeatures = buildMapCardFeatures(mapCardNodeFeatures, mapPin.offer.features);
   mapCardNodeDescription.textContent = mapPin.offer.description;
 
