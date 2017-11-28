@@ -174,19 +174,10 @@ var createMapPinsNode = function (arrayMapPins) {
 //  node (object) - узел содержащий ВСЕ возможные удобства
 //  features (object) - массив текущих удобств
 var buildMapCardFeatures = function (node, features) {
-  var flag;
   var i;
-  var j;
 
   for (i = 0; i < OFFER_AVAILABLE_FEATURES.length; i++) {
-    flag = false;
-    for (j = 0; j < features.length; j++) {
-      if (OFFER_AVAILABLE_FEATURES[i] === features[j]) {
-        flag = true;
-        break;
-      }
-    }
-    if (flag !== true) {
+    if (features.indexOf(OFFER_AVAILABLE_FEATURES[i]) === -1) {
       node.removeChild(node.querySelector('.feature--' + OFFER_AVAILABLE_FEATURES[i]));
     }
   }
