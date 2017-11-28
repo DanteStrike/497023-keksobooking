@@ -74,19 +74,21 @@ var generateTitelsArray = function (count) {
   return arrayTitels;
 };
 
-//  Функция генерирует случайный массив строк (features)
+//  Функция генерирует случайный массив строк со случайной длинной (features)
 //  strArray (obj) - массив откуда выбирать
 //  return features (string) - массив строк для Offer
 var getRandomOfferFeatures = function () {
-  var count = getRandomInt(1, OFFER_AVAILABLE_FEATURES.length);
-  var features = generateRandomArray(count);
+  var count = getRandomInt(1, OFFER_AVAILABLE_FEATURES.length + 1);
+  var features = generateRandomArray(OFFER_AVAILABLE_FEATURES.length);
   var i;
 
+  //  Обрезание массива по случайной длине
+  features.length = count;
   for (i = 0; i < features.length; i++) {
     features[i] = OFFER_AVAILABLE_FEATURES[features[i]];
   }
 
-  return features.sort();
+  return features;
 };
 
 //  Функция собирает объект mapPin
