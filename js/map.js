@@ -53,7 +53,7 @@ var generateRandomArray = function (count) {
   var array = [];
 
   for (i = 0; i < count; i++) {
-    array.push(i);
+    array[i] = i;
   }
 
   return array.sort(compareRandom);
