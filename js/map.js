@@ -175,7 +175,6 @@ var createMapPinsNode = function (arrayMapPins) {
 //  Функция, путем удаления, убирает все недоступные 'удобства' из узла, которых нет в массиве (features)
 //  node (object) - узел содержащий ВСЕ возможные удобства
 //  features (object) - массив текущих удобств
-//  return node (object) - вернуть узел
 var buildMapCardFeatures = function (node, features) {
   var flag;
   var i;
@@ -193,8 +192,6 @@ var buildMapCardFeatures = function (node, features) {
       node.removeChild(node.querySelector('.feature--' + OFFER_AVAILABLE_FEATURES[i]));
     }
   }
-
-  return node;
 };
 
 //  Функция создает DOM элемент шаблона (template) 'article.map__card', согласно массиву объектов mapPins
@@ -219,8 +216,7 @@ var buildMapCard = function (mapPin) {
   mapCardNodeType.textContent = mapPin.offer.type;
   mapCardNodeRoomsGuests.textContent = mapPin.offer.rooms + ' комнаты для ' + mapPin.offer.guests + ' гостей';
   mapCardNodeCheckInOut.textContent = 'Заезд после ' + mapPin.offer.checkin + ', выезд до ' + mapPin.offer.checkout;
-  //  переменная mapCardNodeFeatures Почему-то не нравится ESlint
-  mapCardNodeFeatures = buildMapCardFeatures(mapCardNodeFeatures, mapPin.offer.features);
+  buildMapCardFeatures(mapCardNodeFeatures, mapPin.offer.features);
   mapCardNodeDescription.textContent = mapPin.offer.description;
 
   return mapCardNode;
