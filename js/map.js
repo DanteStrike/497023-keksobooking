@@ -96,7 +96,6 @@ var getRandomOfferFeatures = function () {
 //  offerTitel (string) - заголовок предложения
 //  return pin (obj)
 var createMapPin = function (avatarNumber, offerTitel) {
-  var mapPin;
   var objAuthor = {
     avatar: 'img/avatars/user0' + avatarNumber.toString() + '.png'
   };
@@ -117,14 +116,12 @@ var createMapPin = function (avatarNumber, offerTitel) {
     description: [],
     photos: []
   };
-
-  mapPin = {
+  var mapPin = {
     author: objAuthor,
     offer: objOffer,
     location: objLocation
   };
 
- // mapPin = mapPin; - Как же создать структурк одив в один как указано в задании, если жалуется ESLint
   return mapPin;
 };
 
