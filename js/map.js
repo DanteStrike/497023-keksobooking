@@ -67,7 +67,6 @@ var generateTitelsArray = function (count) {
   var array = generateRandomArray(count);
   var arrayTitels = [];
 
-  arrayTitels.length = array.length;
   for (i = 0; i < count; i++) {
     arrayTitels[array[i]] = OFFER_TITELS[i];
   }
@@ -134,7 +133,6 @@ var generateMapPins = function (count) {
   var offerTitels = generateTitelsArray(count);
   var arrayMapPins = [];
 
-  arrayMapPins.length = count;
   for (i = 0; i < count; i++) {
     arrayMapPins[i] = createMapPin(avatarNumbers[i] + 1, offerTitels[i]);
   }
