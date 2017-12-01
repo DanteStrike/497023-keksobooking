@@ -383,6 +383,41 @@ var onMapCardsNodeClick = function (evt) {
   }
 };
 
+var onNoticeFormTimeInSelectChange = function () {
+  noticeFormTimeOutSelect.value = noticeFormTimeInSelect.value;
+};
+
+var onNoticeFormTimeOutSelectChange = function () {
+  noticeFormTimeInSelect.value = noticeFormTimeOutSelect.value;
+};
+
+var onNoticeFormRoomstSelectChange = function () {
+
+  //  Несостыковка значений value у разных селекторов
+  if (noticeFormRoomstSelect.value === '100') {
+    noticeFormCapacitySelect.value = 0;
+  } else {
+    noticeFormCapacitySelect.value = noticeFormRoomstSelect.value;
+  }
+};
+
+var onNoticeFormTypeSelectChange = function () {
+  switch (noticeFormTypeSelect.value) {
+    case 'flat':
+      priceInputMin = PRICE_INPUT_MIN_FLATE;
+      break;
+    case 'bungalo':
+      priceInputMin = PRICE_INPUT_MIN_BUNGALO;
+      break;
+    case 'house':
+      priceInputMin = PRICE_INPUT_MIN_HOUSE;
+      break;
+    case 'palace':
+      priceInputMin = PRICE_INPUT_MIN_PALACE;
+      break;
+  }
+};
+
 
 disableNoticeForm();
 
@@ -409,3 +444,9 @@ mapPinsNode.addEventListener('keydown', onMapPinsNodeEnterPress);
 
 mapCardsNode.addEventListener('click', onMapCardsNodeClick);
 mapCardsNode.addEventListener('keydown', onMapCardsNodeEnterPress);
+
+noticeFormTimeInSelect.addEventListener('change', onNoticeFormTimeInSelectChange);
+noticeFormTimeOutSelect.addEventListener('change', onNoticeFormTimeOutSelectChange);
+noticeFormTypeSelect.addEventListener('change', onNoticeFormTypeSelectChange);
+noticeFormRoomstSelect.addEventListener('change', onNoticeFormRoomstSelectChange);
+
