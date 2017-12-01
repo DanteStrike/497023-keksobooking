@@ -418,6 +418,30 @@ var onNoticeFormTypeSelectChange = function () {
   }
 };
 
+var onNoticeFormPriceInputInvalid = function (evt) {
+  var target = evt.target;
+
+  if (target.value < priceInputMin) {
+    target.setCustomValidity('Минимальная цена = ' + priceInputMin);
+  } else {
+    target.setCustomValidity('');
+  }
+}
+
+var onNoticeFormTitleInputInvalid = function (evt) {
+  //  браузер Edge не поддерживает атрибут minlength
+  var target = evt.target;
+
+  if (target.value.length < TITLE_INPUT_MIN_LENGTH) {
+    target.setCustomValidity('Имя должно состоять минимум из ' + TITLE_INPUT_MIN_LENGTH + ' символов');
+  } else if (noticeFormTitleInput.validity.tooLong) {
+    noticeFormTitleInput.setCustomValidity('Имя не должно превышать ' + TITLE_INPUT_MAX_LENGTH + ' символов');
+  } else if (noticeFormTitleInput.validity.valueMissing) {
+    noticeFormTitleInput.setCustomValidity('Обязательное поле');
+  } else {
+    noticeFormTitleInput.setCustomValidity('');
+  }
+};
 
 disableNoticeForm();
 
@@ -450,3 +474,5 @@ noticeFormTimeOutSelect.addEventListener('change', onNoticeFormTimeOutSelectChan
 noticeFormTypeSelect.addEventListener('change', onNoticeFormTypeSelectChange);
 noticeFormRoomstSelect.addEventListener('change', onNoticeFormRoomstSelectChange);
 
+noticeFormPriceInput.addEventListener('invalid', onNoticeFormPriceInputInvalid);
+noticeFormTitleInput.addEventListener('invalid', onNoticeFormTitleInputInvalid);
