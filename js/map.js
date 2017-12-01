@@ -43,6 +43,14 @@ var noticeForm = document.querySelector('.notice__form');
 var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
 
 
+//  Переключатели видимости узла
+var hideNode = function (node) {
+  node.style.display = 'none';
+};
+
+var showNode = function (node) {
+  node.style.display = '';
+};
 
 //  Функция генерирует случайное целое число в промежутке от min до max
 //  min, max (int)
