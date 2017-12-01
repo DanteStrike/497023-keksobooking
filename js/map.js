@@ -286,7 +286,8 @@ var enableNoticeForm = function () {
   }
 };
 
-var initInputsAttributes = function () {
+var initInputsSelectsAttributes = function () {
+  // Изначально данных атт нет в разметке
   noticeFormTitleInput.required = true;
   noticeFormTitleInput.maxLength = TITLE_INPUT_MAX_LENGTH;
 
@@ -294,9 +295,11 @@ var initInputsAttributes = function () {
   noticeFormAddressInput.readOnly = true;
 
   noticeFormPriceInput.required = true;
-  noticeFormPriceInput.placeholder = PRICE_INPUT_PLACEHOLDER;
-  noticeFormPriceInput.value = PRICE_INPUT_PLACEHOLDER;
+  noticeFormPriceInput.min = PRICE_INPUT_MIN_DEFAULT;
   noticeFormPriceInput.max = PRICE_INPUT_MAX_VALUE;
+
+  //  Количество комнат связано с количеством гостей
+  noticeFormCapacitySelect.value = noticeFormRoomstSelect.value;
 };
 
 
@@ -336,7 +339,7 @@ var onMapCardsNodeEnterPress = function (evt) {
 var onMapPinMainMouseUp = function () {
   mapNode.classList.remove('map--faded');
   mapGeneratedPins.forEach(showNode);
-  initInputsAttributes();
+  initInputsSelectsAttributes();
   enableNoticeForm();
 };
 
