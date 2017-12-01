@@ -426,7 +426,7 @@ var onNoticeFormPriceInputInvalid = function (evt) {
   } else {
     target.setCustomValidity('');
   }
-}
+};
 
 var onNoticeFormTitleInputInvalid = function (evt) {
   //  браузер Edge не поддерживает атрибут minlength
