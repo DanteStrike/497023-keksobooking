@@ -27,10 +27,18 @@ var OFFER_GUESTS_MAX = 5;
 var OFFER_CHECK_TIMES = ['12:00', '13:00', '14:00'];
 var OFFER_AVAILABLE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
 var mapPins;
 var mapNode = document.querySelector('.map');
-var mapPinsNode = document.querySelector('.map .map__pins');
-var mapFiltersContainerNode = document.querySelector('.map .map__filters-container');
+var mapFiltersContainerNode = mapNode.querySelector('.map__filters-container');
+var mapPinsNode = mapNode.querySelector('.map__pins');
+var mapPinMain = mapPinsNode.querySelector('.map__pin--main');
+var mapGeneratedPins;
+var mapGeneratedCards;
+var mapCardsNode;
+
 
 //  Функция генерирует случайное целое число в промежутке от min до max
 //  min, max (int)
