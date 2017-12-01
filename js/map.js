@@ -30,6 +30,10 @@ var OFFER_AVAILABLE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elev
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
+var TITLE_INPUT_MAX_LENGTH = 100;
+var PRICE_INPUT_PLACEHOLDER = 1000;
+var PRICE_INPUT_MAX_VALUE = 1000000;
+
 var mapPins;
 var mapNode = document.querySelector('.map');
 var mapFiltersContainerNode = mapNode.querySelector('.map__filters-container');
@@ -40,6 +44,10 @@ var mapGeneratedCards;
 var mapCardsNode;
 
 var noticeForm = document.querySelector('.notice__form');
+var noticeFormTitleInput = noticeForm.querySelector('#title');
+var noticeFormAddressInput = noticeForm.querySelector('#address');
+var noticeFormPriceInput = noticeForm.querySelector('#price');
+
 var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
 
 
@@ -265,6 +273,19 @@ var enableNoticeForm = function () {
   }
 };
 
+var initInputsAttributes = function () {
+  noticeFormTitleInput.required = true;
+  noticeFormTitleInput.maxLength = TITLE_INPUT_MAX_LENGTH;
+
+  noticeFormAddressInput.required = true;
+  noticeFormAddressInput.readOnly = true;
+
+  noticeFormPriceInput.required = true;
+  noticeFormPriceInput.placeholder = PRICE_INPUT_PLACEHOLDER;
+  noticeFormPriceInput.value = PRICE_INPUT_PLACEHOLDER;
+  noticeFormPriceInput.max = PRICE_INPUT_MAX_VALUE;
+};
+
 
 var diactivatePinBase = function (node) {
   var offerIndex;
@@ -302,6 +323,7 @@ var onMapCardsNodeEnterPress = function (evt) {
 var onMapPinMainMouseUp = function () {
   mapNode.classList.remove('map--faded');
   mapGeneratedPins.forEach(showNode);
+  initInputsAttributes();
   enableNoticeForm();
 };
 
