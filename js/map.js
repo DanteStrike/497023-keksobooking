@@ -265,14 +265,109 @@ var enableNoticeForm = function () {
   }
 };
 
-//  1) Сгенерировать объекты
+
+var diactivatePinBase = function (node) {
+  var offerIndex;
+
+  //  Поиск индекса активной кнопки относительно массива всех сгенерированных кнопок
+  //  Для определения соответствующей этой кнопке предложения
+  node.classList.remove('map__pin--active');
+  offerIndex = [].indexOf.call(mapGeneratedPins, node);
+  hideNode(mapGeneratedCards[offerIndex]);
+};
+
+//  Ф-ции НАЖАТИЯ
+
+var onMapEscPress = function (evt) {
+  var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
+  if (evt.keyCode === ESC_KEYCODE && mapPinActive) {
+    diactivatePinBase(mapPinActive);
+  }
+};
+
+var onMapPinsNodeEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    onMapPinsNodeClick(evt);
+  }
+};
+
+var onMapCardsNodeEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    onMapCardsNodeClick(evt);
+  }
+};
+
+//  Ф-ции КЛИКИ
+
+var onMapPinMainMouseUp = function () {
+  mapNode.classList.remove('map--faded');
+  mapGeneratedPins.forEach(showNode);
+  enableNoticeForm();
+};
+
+//  Делегирование на всплытии
+var onMapPinsNodeClick = function (evt) {
+  var target;
+  var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
+  var offerIndex;
+
+  // Переключить фокус, если необходимо. target - img, его родитель button
+  if (evt.target.tagName === 'IMG') {
+    target = evt.target.parentNode;
+  } else {
+    target = evt.target;
+  }
+
+  if (target.className === 'map__pin') {
+    if (mapPinActive) {
+      diactivatePinBase(mapPinActive);
+    }
+
+    target.classList.add('map__pin--active');
+    offerIndex = [].indexOf.call(mapGeneratedPins, target);
+    showNode(mapGeneratedCards[offerIndex]);
+
+    document.addEventListener('keydown', onMapEscPress);
+  }
+};
+
+//  Делегирование на всплытии
+var onMapCardsNodeClick = function (evt) {
+  var target = evt.target;
+  var pinIndex;
+
+  if (target.classList.contains('popup__close')) {
+    hideNode(target.parentNode);
+    pinIndex = [].indexOf.call(mapGeneratedCards, target.parentNode);
+    mapGeneratedPins[pinIndex].classList.remove('map__pin--active');
+
+    document.removeEventListener('keydown', onMapEscPress);
+  }
+};
+
+
+disableNoticeForm();
+
+//  Генерация и сборка узлов
 mapPins = generateMapPins(MAP_PIN_COUNT);
-
-//  2) "Открыть карту"
-mapNode.classList.remove('map--faded');
-
-//  3) Создать и внедрить фрагмент с DOM элементами "кнопок"
 mapPinsNode.appendChild(createMapPinsNode(mapPins));
 
-//  4) Создать и внедрить DIV c DOM элементами предложений
-mapNode.insertBefore(createMapCards(mapPins), mapFiltersContainerNode);
+//  Выбрать только сгенерированные кнопки (исключить главную кнопку из выборки)
+mapGeneratedPins = mapPinsNode.querySelectorAll('.map__pin:not(.map__pin--main)');
+mapGeneratedPins.forEach(hideNode);
+
+//  Генерация предложений
+mapCardsNode = createMapCards(mapPins);
+mapNode.insertBefore(mapCardsNode, mapFiltersContainerNode);
+mapGeneratedCards = mapNode.querySelectorAll('.map__card');
+mapGeneratedCards.forEach(hideNode);
+
+//  ИНИЦИАЛИЗАЦИЯ Событий
+
+mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp);
+
+mapPinsNode.addEventListener('click', onMapPinsNodeClick);
+mapPinsNode.addEventListener('keydown', onMapPinsNodeEnterPress);
+
+mapCardsNode.addEventListener('click', onMapCardsNodeClick);
+mapCardsNode.addEventListener('keydown', onMapCardsNodeEnterPress);
