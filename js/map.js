@@ -39,6 +39,10 @@ var mapGeneratedPins;
 var mapGeneratedCards;
 var mapCardsNode;
 
+var noticeForm = document.querySelector('.notice__form');
+var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
+
+
 
 //  Функция генерирует случайное целое число в промежутке от min до max
 //  min, max (int)
@@ -236,6 +240,22 @@ var createMapCards = function (arrayMapPins) {
   return divNode;
 };
 
+var disableNoticeForm = function () {
+  var i;
+
+  for (i = 0; i < noticeFormFieldsets.length; i++) {
+    noticeFormFieldsets[i].disabled = true;
+  }
+};
+
+var enableNoticeForm = function () {
+  var i;
+
+  noticeForm.classList.remove('notice__form--disabled');
+  for (i = 0; i < noticeFormFieldsets.length; i++) {
+    noticeFormFieldsets[i].disabled = false;
+  }
+};
 
 //  1) Сгенерировать объекты
 mapPins = generateMapPins(MAP_PIN_COUNT);
