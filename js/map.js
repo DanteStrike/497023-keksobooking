@@ -30,9 +30,17 @@ var OFFER_AVAILABLE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elev
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
+var TITLE_INPUT_MIN_LENGTH = 30;
 var TITLE_INPUT_MAX_LENGTH = 100;
-var PRICE_INPUT_PLACEHOLDER = 1000;
+
+var PRICE_INPUT_MIN_DEFAULT = 0;
+var PRICE_INPUT_MIN_FLATE = 0;
+var PRICE_INPUT_MIN_BUNGALO = 1000;
+var PRICE_INPUT_MIN_HOUSE = 5000;
+var PRICE_INPUT_MIN_PALACE = 1000000;
 var PRICE_INPUT_MAX_VALUE = 1000000;
+
+var priceInputMin = PRICE_INPUT_MIN_DEFAULT;
 
 var mapPins;
 var mapNode = document.querySelector('.map');
@@ -47,6 +55,11 @@ var noticeForm = document.querySelector('.notice__form');
 var noticeFormTitleInput = noticeForm.querySelector('#title');
 var noticeFormAddressInput = noticeForm.querySelector('#address');
 var noticeFormPriceInput = noticeForm.querySelector('#price');
+var noticeFormTimeInSelect = noticeForm.querySelector('#timein');
+var noticeFormTimeOutSelect = noticeForm.querySelector('#timeout');
+var noticeFormTypeSelect = noticeForm.querySelector('#type');
+var noticeFormRoomstSelect = noticeForm.querySelector('#room_number');
+var noticeFormCapacitySelect = noticeForm.querySelector('#capacity');
 
 var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
 
