@@ -34,12 +34,8 @@ var TITLE_INPUT_MIN_LENGTH = 30;
 var TITLE_INPUT_MAX_LENGTH = 100;
 
 var PRICE_INPUT_MIN_DEFAULT = 0;
-var PRICE_INPUT_MIN_FLATE = 0;
-var PRICE_INPUT_MIN_BUNGALO = 1000;
-var PRICE_INPUT_MIN_HOUSE = 5000;
-var PRICE_INPUT_MIN_PALACE = 1000000;
+var PRICE_INPUT_MIN_TYPES = [0, 1000, 5000, 1000000];
 var PRICE_INPUT_MAX_VALUE = 1000000;
-
 var priceInputMin = PRICE_INPUT_MIN_DEFAULT;
 
 var mapPins;
@@ -384,20 +380,9 @@ var onNoticeFormRoomstSelectChange = function () {
 };
 
 var onNoticeFormTypeSelectChange = function () {
-  switch (noticeFormTypeSelect.value) {
-    case 'flat':
-      priceInputMin = PRICE_INPUT_MIN_FLATE;
-      break;
-    case 'bungalo':
-      priceInputMin = PRICE_INPUT_MIN_BUNGALO;
-      break;
-    case 'house':
-      priceInputMin = PRICE_INPUT_MIN_HOUSE;
-      break;
-    case 'palace':
-      priceInputMin = PRICE_INPUT_MIN_PALACE;
-      break;
-  }
+  var selectedOptionIndex = noticeFormTypeSelect.options.selectedIndex;
+
+  priceInputMin = PRICE_INPUT_MIN_TYPES[selectedOptionIndex];
 };
 
 var onNoticeFormPriceInputInvalid = function (evt) {
