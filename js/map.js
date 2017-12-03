@@ -90,10 +90,9 @@ var compareRandom = function () {
 //  count (int) - кол-во чисел (или максимальное число последовательности)
 //  return array (object)
 var generateRandomArray = function (count) {
-  var i;
   var array = [];
 
-  for (i = 0; i < count; i++) {
+  for (var i = 0; i < count; i++) {
     array[i] = i;
   }
 
@@ -104,11 +103,10 @@ var generateRandomArray = function (count) {
 //  count (int) - кол-во чисел (или максимальное число последовательности)
 //  return arrayTitels (object)
 var generateTitelsArray = function (count) {
-  var i;
   var array = generateRandomArray(count);
   var arrayTitels = [];
 
-  for (i = 0; i < count; i++) {
+  for (var i = 0; i < count; i++) {
     arrayTitels[array[i]] = OFFER_TITELS[i];
   }
 
@@ -121,11 +119,10 @@ var generateTitelsArray = function (count) {
 var getRandomOfferFeatures = function () {
   var count = getRandomInt(1, OFFER_AVAILABLE_FEATURES.length + 1);
   var features = generateRandomArray(OFFER_AVAILABLE_FEATURES.length);
-  var i;
 
   //  Обрезание массива по случайной длине
   features.length = count;
-  for (i = 0; i < features.length; i++) {
+  for (var i = 0; i < features.length; i++) {
     features[i] = OFFER_AVAILABLE_FEATURES[features[i]];
   }
 
@@ -171,12 +168,11 @@ var createMapPin = function (avatarNumber, offerTitel) {
 //  count (int) - кол-во чисел (или максимальное число последовательности)
 //  return arrayMapPins (object)
 var generateMapPins = function (count) {
-  var i;
   var avatarNumbers = generateRandomArray(count);
   var offerTitels = generateTitelsArray(count);
   var arrayMapPins = [];
 
-  for (i = 0; i < count; i++) {
+  for (var i = 0; i < count; i++) {
     arrayMapPins[i] = createMapPin(avatarNumbers[i] + 1, offerTitels[i]);
   }
 
@@ -204,9 +200,8 @@ var buildMapPinNode = function (mapPin) {
 //  return fragment (object) - вернуть собранный фрагмент
 var createMapPinsNode = function (arrayMapPins) {
   var fragment = document.createDocumentFragment();
-  var i;
 
-  for (i = 0; i < arrayMapPins.length; i++) {
+  for (var i = 0; i < arrayMapPins.length; i++) {
     fragment.appendChild(buildMapPinNode(arrayMapPins[i]));
   }
 
@@ -217,9 +212,7 @@ var createMapPinsNode = function (arrayMapPins) {
 //  node (object) - узел содержащий ВСЕ возможные удобства
 //  features (object) - массив текущих удобств
 var buildMapCardFeatures = function (node, features) {
-  var i;
-
-  for (i = 0; i < OFFER_AVAILABLE_FEATURES.length; i++) {
+  for (var i = 0; i < OFFER_AVAILABLE_FEATURES.length; i++) {
     if (features.indexOf(OFFER_AVAILABLE_FEATURES[i]) === -1) {
       node.removeChild(node.querySelector('.feature--' + OFFER_AVAILABLE_FEATURES[i]));
     }
@@ -259,10 +252,9 @@ var buildMapCard = function (mapPin) {
 //  return divNode (object) - вернуть собранный элемент DIV
 var createMapCards = function (arrayMapPins) {
   var divNode = document.createElement('div');
-  var i;
 
   divNode.className = 'map__cards';
-  for (i = 0; i < arrayMapPins.length; i++) {
+  for (var i = 0; i < arrayMapPins.length; i++) {
     divNode.appendChild(buildMapCard(arrayMapPins[i]));
   }
 
@@ -270,18 +262,14 @@ var createMapCards = function (arrayMapPins) {
 };
 
 var disableNoticeForm = function () {
-  var i;
-
-  for (i = 0; i < noticeFormFieldsets.length; i++) {
+  for (var i = 0; i < noticeFormFieldsets.length; i++) {
     noticeFormFieldsets[i].disabled = true;
   }
 };
 
 var enableNoticeForm = function () {
-  var i;
-
   noticeForm.classList.remove('notice__form--disabled');
-  for (i = 0; i < noticeFormFieldsets.length; i++) {
+  for (var i = 0; i < noticeFormFieldsets.length; i++) {
     noticeFormFieldsets[i].disabled = false;
   }
 };
@@ -345,16 +333,10 @@ var onMapPinMainMouseUp = function () {
 
 //  Делегирование на всплытии
 var onMapPinsNodeClick = function (evt) {
-  var target;
+  // Переключить фокус, если необходимо. target - img, его родитель button
+  var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
   var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
   var offerIndex;
-
-  // Переключить фокус, если необходимо. target - img, его родитель button
-  if (evt.target.tagName === 'IMG') {
-    target = evt.target.parentNode;
-  } else {
-    target = evt.target;
-  }
 
   if (target.className === 'map__pin') {
     if (mapPinActive) {
