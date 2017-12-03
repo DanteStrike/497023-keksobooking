@@ -295,16 +295,10 @@ var onMapPinMainMouseUp = function () {
 
 //  Делегирование на всплытии
 var onMapPinsNodeClick = function (evt) {
-  var target;
+  // Переключить фокус, если необходимо. target - img, его родитель button
+  var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
   var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
   var offerIndex;
-
-  // Переключить фокус, если необходимо. target - img, его родитель button
-  if (evt.target.tagName === 'IMG') {
-    target = evt.target.parentNode;
-  } else {
-    target = evt.target;
-  }
 
   if (target.className === 'map__pin') {
     if (mapPinActive) {
