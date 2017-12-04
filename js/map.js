@@ -36,22 +36,22 @@ var TITLE_INPUT_MAX_LENGTH = 100;
 var PRICE_INPUT_MIN_DEFAULT = 0;
 
 var PRICE_INPUT_MIN_TYPES = [
-{
-  type: 'flat',
-  minPrice: 0
-},
-{
-  type: 'bungalo',
-  minPrice: 1000
-},
-{
-  type: 'house',
-  minPrice: 5000
-},
-{
-  type: 'palace',
-  minPrice: 1000000
-}];
+  {
+    type: 'flat',
+    minPrice: 0
+  },
+  {
+    type: 'bungalo',
+    minPrice: 1000
+  },
+  {
+    type: 'house',
+    minPrice: 5000
+  },
+  {
+    type: 'palace',
+    minPrice: 1000000
+  }];
 
 var PRICE_INPUT_MAX_VALUE = 1000000;
 var priceInputMin = PRICE_INPUT_MIN_DEFAULT;
