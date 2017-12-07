@@ -58,6 +58,10 @@
     noticeFormCapacitySelect.value = noticeFormRoomstSelect.value;
   };
 
+  var changeNoticeFormAddressInput = function (coords) {
+    noticeFormAddressInput.value = 'x: {' + coords.x + '}, y: {' + coords.y + '}';
+  };
+
   var onNoticeFormTimeInSelectChange = function () {
     noticeFormTimeOutSelect.value = noticeFormTimeInSelect.value;
   };
@@ -119,6 +123,7 @@
   noticeFormTitleInput.addEventListener('invalid', onNoticeFormTitleInputInvalid);
 
   window.form = {
-    enableNoticeForm: enableNoticeForm
+    enableNoticeForm: enableNoticeForm,
+    changeNoticeFormAddressInput: changeNoticeFormAddressInput
   };
 })();
