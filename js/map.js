@@ -8,6 +8,7 @@
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
   var MAP_PIN_Y_DELTA = 40;
+  var MAP_PIN_X_DELTA = 5;
 
   var mapNode = document.querySelector('.map');
 
@@ -121,6 +122,7 @@
     var onPinMainMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
+      var locationCoords;
       //  Текущие координаты мышки
       var mouseMoveCoords = {
         x: moveEvt.clientX,
@@ -132,12 +134,18 @@
 
       //  Граница доступной области пермещения по Y
       //  Реверсируем ось Y
-      var borderY = mapNode.clientHeight - MAP_PIN_Y_DELTA - mouseTargetPositionY;
+      var borderY = mapNode.clientHeight - MAP_PIN_Y_DELTA - mouseTargetPositionY - pageYOffset;
 
       if (borderY >= 100 && borderY <= 500) {
         target.style.left = (target.offsetLeft + (mouseMoveCoords.x - mouseTargetPosition.x - targetCoords.x)) + 'px';
         target.style.top = (target.offsetTop + (mouseTargetPositionY - targetCoords.y)) + 'px';
 
+        locationCoords = {
+          x: parseInt(target.style.left) - MAP_PIN_X_DELTA - pageXOffset,
+          y: mapNode.clientHeight - MAP_PIN_Y_DELTA - mouseTargetPositionY - pageYOffset
+        }
+
+        window.form.changeNoticeFormAddressInput(locationCoords);
         //  Неопходимо переопределить текущее положение кнопки, так произащел сдвиг эл-та
         targetCoords = {
           x: target.getBoundingClientRect().left,
