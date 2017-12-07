@@ -145,7 +145,7 @@
       var newTargetCoordsOnMap = {
         y: mapNode.clientHeight - MAP_PIN_MAIN_HEIGTH - newTargetCoords.y - pageYOffset,
         x: newTargetCoords.x - mapNode.clientLeft - pageXOffset
-      }
+      };
 
       if (newTargetCoordsOnMap.x >= MAP_PIN_MAIN_BORDER_X_MIN && newTargetCoordsOnMap.x <= MAP_PIN_MAIN_BORDER_X_MAX && newTargetCoordsOnMap.y >= MAP_PIN_MAIN_BORDER_Y_MIN && newTargetCoordsOnMap.y <= MAP_PIN_MAIN_BORDER_Y_MAX) {
         target.style.left = (target.offsetLeft + (newTargetCoords.x - targetCoords.x)) + 'px';
