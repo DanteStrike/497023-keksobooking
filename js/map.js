@@ -7,8 +7,14 @@
 (function () {
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
-  var MAP_PIN_Y_DELTA = 40;
-  var MAP_PIN_X_DELTA = 5;
+
+  //  Учитывая псевдоэлемент
+  var MAP_PIN_MAIN_HEIGTH = 80;
+
+  var MAP_PIN_MAIN_BORDER_X_MIN = 300;
+  var MAP_PIN_MAIN_BORDER_X_MAX = 900;
+  var MAP_PIN_MAIN_BORDER_Y_MIN = 100;
+  var MAP_PIN_MAIN_BORDER_Y_MAX = 500;
 
   var mapNode = document.querySelector('.map');
 
@@ -112,7 +118,7 @@
       y: evt.clientY
     };
 
-    //  Сдвиг координат мужде мышкой и кнопкой (положение мыши относительно кнопки в нулевой момент),
+    //  Положение мыши относительно кнопки в нулевой момент,
     //  величина постоянная до отжатия кнопки мышки
     var mouseTargetPosition = {
       x: mouseStartCoords.x - targetCoords.x,
@@ -122,31 +128,32 @@
     var onPinMainMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
-      var locationCoords;
       //  Текущие координаты мышки
       var mouseMoveCoords = {
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
 
-      //  Положение мыши относительно кнопки ПО Y в момент пермещения
-      var mouseTargetPositionY = mouseMoveCoords.y - mouseTargetPosition.y;
+      //  Предпологаемое положение кнопки по Y
+      var newTargetCoords = {
+        x: mouseMoveCoords.x - mouseTargetPosition.x,
+        y: mouseMoveCoords.y - mouseTargetPosition.y
+      };
 
-      //  Граница доступной области пермещения по Y
+      //  Пересчитываем координаты относительно новой оси (левый нижний угол карты)
       //  Реверсируем ось Y
-      var borderY = mapNode.clientHeight - MAP_PIN_Y_DELTA - mouseTargetPositionY - pageYOffset;
+      var newTargetCoordsOnMap = {
+        y: mapNode.clientHeight - MAP_PIN_MAIN_HEIGTH - newTargetCoords.y - pageYOffset,
+        x: newTargetCoords.x - mapNode.clientLeft - pageXOffset
+      }
 
-      if (borderY >= 100 && borderY <= 500) {
-        target.style.left = (target.offsetLeft + (mouseMoveCoords.x - mouseTargetPosition.x - targetCoords.x)) + 'px';
-        target.style.top = (target.offsetTop + (mouseTargetPositionY - targetCoords.y)) + 'px';
+      if (newTargetCoordsOnMap.x >= MAP_PIN_MAIN_BORDER_X_MIN && newTargetCoordsOnMap.x <= MAP_PIN_MAIN_BORDER_X_MAX && newTargetCoordsOnMap.y >= MAP_PIN_MAIN_BORDER_Y_MIN && newTargetCoordsOnMap.y <= MAP_PIN_MAIN_BORDER_Y_MAX) {
+        target.style.left = (target.offsetLeft + (newTargetCoords.x - targetCoords.x)) + 'px';
+        target.style.top = (target.offsetTop + (newTargetCoords.y - targetCoords.y)) + 'px';
 
-        locationCoords = {
-          x: parseInt(target.style.left) - MAP_PIN_X_DELTA - pageXOffset,
-          y: mapNode.clientHeight - MAP_PIN_Y_DELTA - mouseTargetPositionY - pageYOffset
-        }
+        window.form.changeNoticeFormAddressInput(newTargetCoordsOnMap);
 
-        window.form.changeNoticeFormAddressInput(locationCoords);
-        //  Неопходимо переопределить текущее положение кнопки, так произащел сдвиг эл-та
+        //  Неопходимо переопределить текущее положение кнопки, так как произашел сдвиг эл-та
         targetCoords = {
           x: target.getBoundingClientRect().left,
           y: target.getBoundingClientRect().top
