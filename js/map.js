@@ -7,8 +7,10 @@
 (function () {
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
+  var MAP_PIN_Y_DELTA = 40;
 
   var mapNode = document.querySelector('.map');
+
   var mapFiltersContainerNode = mapNode.querySelector('.map__filters-container');
   var mapPinsNode = mapNode.querySelector('.map__pins');
   var mapPinMain = mapPinsNode.querySelector('.map__pin--main');
@@ -91,6 +93,70 @@
     window.form.enableNoticeForm();
   };
 
+  var onMapPinMainMouseDown = function (evt) {
+    evt.preventDefault();
+
+    // Переключить фокус, если необходимо. target - img, его родитель button
+    var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
+
+    //  Координаты кнопки в нулевой момент
+    var targetCoords = {
+      x: target.getBoundingClientRect().left,
+      y: target.getBoundingClientRect().top
+    };
+
+    //  Координаты мышки в нулевой момент
+    var mouseStartCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    //  Сдвиг координат мужде мышкой и кнопкой (положение мыши относительно кнопки в нулевой момент),
+    //  величина постоянная до отжатия кнопки мышки
+    var mouseTargetPosition = {
+      x: mouseStartCoords.x - targetCoords.x,
+      y: mouseStartCoords.y - targetCoords.y
+    };
+
+    var onPinMainMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      //  Текущие координаты мышки
+      var mouseMoveCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      //  Положение мыши относительно кнопки ПО Y в момент пермещения
+      var mouseTargetPositionY = mouseMoveCoords.y - mouseTargetPosition.y;
+
+      //  Граница доступной области пермещения по Y
+      //  Реверсируем ось Y
+      var borderY = mapNode.clientHeight - MAP_PIN_Y_DELTA - mouseTargetPositionY;
+
+      if (borderY >= 100 && borderY <= 500) {
+        target.style.left = (target.offsetLeft + (mouseMoveCoords.x - mouseTargetPosition.x - targetCoords.x)) + 'px';
+        target.style.top = (target.offsetTop + (mouseTargetPositionY - targetCoords.y)) + 'px';
+
+        //  Неопходимо переопределить текущее положение кнопки, так произащел сдвиг эл-та
+        targetCoords = {
+          x: target.getBoundingClientRect().left,
+          y: target.getBoundingClientRect().top
+        };
+      }
+    };
+
+    var onPinMainMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onPinMainMouseMove);
+      document.removeEventListener('mouseup', onPinMainMouseUp);
+    };
+
+    document.addEventListener('mousemove', onPinMainMouseMove);
+    document.addEventListener('mouseup', onPinMainMouseUp);
+  };
+
   //  Делегирование на всплытии
   var onMapPinsNodeClick = function (evt) {
     // Переключить фокус, если необходимо. target - img, его родитель button
@@ -140,6 +206,7 @@
 
   //  ИНИЦИАЛИЗАЦИЯ Событий
 
+  mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
   mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp);
 
   mapPinsNode.addEventListener('click', onMapPinsNodeClick);
