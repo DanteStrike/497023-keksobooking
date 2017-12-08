@@ -14,7 +14,7 @@
   var MAP_PIN_Y_MAX = 500;
 
   //  Константы для описания предложения
-  var OFFER_TITELS = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+  var OFFER_Titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
   var OFFER_PRICE_MIN = 1000;
   var OFFER_PRICE_MAX = 1000000;
   var OFFER_TYPES = ['flat', 'house', 'bungalo'];
@@ -53,16 +53,16 @@
 
   //  Функция генерирует случайный массив строк загаловков
   //  count (int) - кол-во чисел (или максимальное число последовательности)
-  //  return arrayTitels (object)
-  var generateTitelsArray = function (count) {
+  //  return arrayTitles (object)
+  var generateTitlesArray = function (count) {
     var array = generateRandomArray(count);
-    var arrayTitels = [];
+    var arrayTitles = [];
 
     for (var i = 0; i < count; i++) {
-      arrayTitels[array[i]] = OFFER_TITELS[i];
+      arrayTitles[array[i]] = OFFER_Titles[i];
     }
 
-    return arrayTitels;
+    return arrayTitles;
   };
 
   //  Функция генерирует случайный массив строк со случайной длинной (features)
@@ -121,11 +121,11 @@
   //  return arrayMapPins (object)
   var generateMapPins = function (count) {
     var avatarNumbers = generateRandomArray(count);
-    var offerTitels = generateTitelsArray(count);
+    var offerTitles = generateTitlesArray(count);
     var arrayMapPins = [];
 
     for (var i = 0; i < count; i++) {
-      arrayMapPins[i] = createMapPin(avatarNumbers[i] + 1, offerTitels[i]);
+      arrayMapPins[i] = createMapPin(avatarNumbers[i] + 1, offerTitles[i]);
     }
 
     return arrayMapPins;
