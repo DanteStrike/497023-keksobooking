@@ -185,8 +185,8 @@
       }
 
       target.classList.add('map__pin--active');
-      offerIndex = [].indexOf.call(mapGeneratedPins, target);
-      showNode(mapGeneratedCards[offerIndex]);
+
+      window.show_card.showCard(target, mapGeneratedPins);
 
       document.addEventListener('keydown', onMapEscPress);
     }

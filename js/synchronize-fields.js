@@ -6,5 +6,5 @@
       var index = sourseData.indexOf(sourseElement.value);
       collback(targetElement, targetData[index]);
     });
-  }
+  };
 })();
