@@ -177,7 +177,6 @@
     // Переключить фокус, если необходимо. target - img, его родитель button
     var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
     var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
-    var offerIndex;
 
     if (target.className === 'map__pin') {
       if (mapPinActive) {
@@ -186,7 +185,7 @@
 
       target.classList.add('map__pin--active');
 
-      window.show_card.showCard(target, mapGeneratedPins);
+      window.showCard(target, mapGeneratedPins);
 
       document.addEventListener('keydown', onMapEscPress);
     }
