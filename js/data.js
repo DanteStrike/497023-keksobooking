@@ -13,6 +13,7 @@
   var MAP_PIN_Y_MIN = 100;
   var MAP_PIN_Y_MAX = 500;
 
+  var AVATAR_NUMBERS = [ 1, 2, 3, 4, 5, 6, 7, 8];
   //  Константы для описания предложения
   var OFFER_TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
   var OFFER_PRICE_MIN = 1000;
@@ -38,47 +39,49 @@
     return Math.random() - 0.5;
   };
 
-  //  Функция генерирует массив из рандомных неповторяющихся чисел от 0 до count - 1
-  //  count (int) - кол-во чисел (или максимальное число последовательности)
-  //  return array (object)
-  var generateRandomArray = function (count) {
-    var array = [];
+  //  Функция перемешивает случайным образом массив source
+  //  count - кол-во элментов в возвращаемом массиве. Если не указан то count = source.length
+  //  count = 'random' - то возвращаемый массив обрезается по случайной длине.
+  //  return randomArray (object)
+  var generateRandomArray = function (source, count, callback) {
+    var randomSequenceIndexes = [];
+    var randomArray = [];
+    var element;
+    var index;
+    var random;
 
-    for (var i = 0; i < count; i++) {
-      array[i] = i;
+    if (!count) {
+      count = source.length;
     }
 
-    return array.sort(compareRandom);
-  };
-
-  //  Функция генерирует случайный массив строк загаловков
-  //  count (int) - кол-во чисел (или максимальное число последовательности)
-  //  return arrayTitles (object)
-  var generateTitlesArray = function (count) {
-    var array = generateRandomArray(count);
-    var arrayTitles = [];
-
-    for (var i = 0; i < count; i++) {
-      arrayTitles[array[i]] = OFFER_TITLES[i];
+    if (count === 'random') {
+      count = Number(getRandomInt(1, source.length + 1));
     }
 
-    return arrayTitles;
-  };
+    //  Собрать случайную последовательность индексов
+    for (var i = 0; i < source.length; i++) {
+      randomSequenceIndexes[i] = i;
+    }
+    randomSequenceIndexes.sort(compareRandom);
 
-  //  Функция генерирует случайный массив строк со случайной длинной (features)
-  //  strArray (obj) - массив откуда выбирать
-  //  return features (string) - массив строк для Offer
-  var getRandomOfferFeatures = function () {
-    var count = getRandomInt(1, OFFER_AVAILABLE_FEATURES.length + 1);
-    var features = generateRandomArray(OFFER_AVAILABLE_FEATURES.length);
-
-    //  Обрезание массива по случайной длине
-    features.length = count;
-    for (var i = 0; i < features.length; i++) {
-      features[i] = OFFER_AVAILABLE_FEATURES[features[i]];
+    //  Обработать обратной связью или по дефолту "перетасовать" source
+    if (typeof callback === 'function') {
+      for (var i = 0; i < source.length; i++) {
+        element = source[i];
+        index = i;
+        random = randomSequenceIndexes[i];
+        randomArray[i] = callback(element, index, random);
+      }
+    } else {
+      for (var i = 0; i < source.length; i++) {
+        randomArray[randomSequenceIndexes[i]] = source[i];
+      }
     }
 
-    return features;
+    //  Возможность обрезать массив.
+    randomArray.length = count;
+
+    return randomArray;
   };
 
   //  Функция собирает объект mapPin
@@ -103,7 +106,7 @@
       guests: getRandomInt(OFFER_GUESTS_MIN, OFFER_GUESTS_MAX),
       checkin: OFFER_CHECK_TIMES[getRandomInt(0, OFFER_CHECK_TIMES.length)],
       checkout: OFFER_CHECK_TIMES[getRandomInt(0, OFFER_CHECK_TIMES.length)],
-      features: getRandomOfferFeatures(),
+      features: generateRandomArray(OFFER_AVAILABLE_FEATURES, 'random'),
       description: [],
       photos: []
     };
@@ -120,15 +123,10 @@
   //  count (int) - кол-во чисел (или максимальное число последовательности)
   //  return arrayMapPins (object)
   var generateMapPins = function (count) {
-    var avatarNumbers = generateRandomArray(count);
-    var offerTitles = generateTitlesArray(count);
-    var arrayMapPins = [];
-
-    for (var i = 0; i < count; i++) {
-      arrayMapPins[i] = createMapPin(avatarNumbers[i] + 1, offerTitles[i]);
-    }
-
-    return arrayMapPins;
+    var offerTitles = generateRandomArray(OFFER_TITLES);
+    return generateRandomArray(offerTitles, count, function(value, index, random) {
+      return createMapPin(random + 1, value);
+    });
   };
 
   window.data = {
