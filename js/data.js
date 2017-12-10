@@ -13,7 +13,7 @@
   var MAP_PIN_Y_MIN = 100;
   var MAP_PIN_Y_MAX = 500;
 
-  var AVATAR_NUMBERS = [ 1, 2, 3, 4, 5, 6, 7, 8];
+  //  var AVATAR_NUMBERS = [ 1, 2, 3, 4, 5, 6, 7, 8];
   //  Константы для описания предложения
   var OFFER_TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
   var OFFER_PRICE_MIN = 1000;
@@ -66,14 +66,14 @@
 
     //  Обработать обратной связью или по дефолту "перетасовать" source
     if (typeof callback === 'function') {
-      for (var i = 0; i < source.length; i++) {
+      for (i = 0; i < source.length; i++) {
         element = source[i];
         index = i;
         random = randomSequenceIndexes[i];
         randomArray[i] = callback(element, index, random);
       }
     } else {
-      for (var i = 0; i < source.length; i++) {
+      for (i = 0; i < source.length; i++) {
         randomArray[randomSequenceIndexes[i]] = source[i];
       }
     }
@@ -124,7 +124,7 @@
   //  return arrayMapPins (object)
   var generateMapPins = function (count) {
     var offerTitles = generateRandomArray(OFFER_TITLES);
-    return generateRandomArray(offerTitles, count, function(value, index, random) {
+    return generateRandomArray(offerTitles, count, function (value, index, random) {
       return createMapPin(random + 1, value);
     });
   };
