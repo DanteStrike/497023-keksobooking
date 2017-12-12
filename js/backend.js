@@ -34,7 +34,7 @@
   };
 
   var save = function (data, onLoad, onError) {
-    var xhr = setup(onSuccess, onError);
+    var xhr = setup(onLoad, onError);
 
     xhr.open('POST', SERVER_URL);
     xhr.send(data);

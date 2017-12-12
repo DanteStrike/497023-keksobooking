@@ -37,28 +37,34 @@
   //  Функция создает фрагмент с DOM элементами шаблона (template) '.map__pin', согласно массиву объектов mapPins
   //  mapPins (object) - массив объектов
   //  return fragment (object) - вернуть собранный фрагмент
-  var createMapPinsNode = function (arrayMapPins) {
+  var onLoad = function (arrayMapPins) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < arrayMapPins.length; i++) {
       fragment.appendChild(window.pin.buildMapPinNode(arrayMapPins[i], mapNode.clientHeight));
     }
 
-    return fragment;
-  };
+    mapPinsNode.appendChild(fragment);
+    mapGeneratedPins = mapPinsNode.querySelectorAll('.map__pin:not(.map__pin--main)');
+    mapGeneratedPins.forEach(hideNode);
 
-  //  Функция создает элемент DIV с DOM элементами шаблона (template) 'article.map__card', согласно массиву объектов mapPins
-  //  mapPins (object) - массив объектов
-  //  return divNode (object) - вернуть собранный элемент DIV
-  var createMapCards = function (arrayMapPins) {
-    var divNode = document.createElement('div');
+    var mapCardsNode = document.createElement('div');
 
-    divNode.className = 'map__cards';
+    mapCardsNode.className = 'map__cards';
     for (var i = 0; i < arrayMapPins.length; i++) {
-      divNode.appendChild(window.card.buildMapCard(arrayMapPins[i]));
+      mapCardsNode.appendChild(window.card.buildMapCard(arrayMapPins[i]));
     }
 
-    return divNode;
+    mapNode.insertBefore(mapCardsNode, mapFiltersContainerNode);
+    mapGeneratedCards = mapCardsNode.childNodes;
+    mapGeneratedCards.forEach(hideNode);
+
+    mapPinsNode.addEventListener('click', onMapPinsNodeClick);
+    mapPinsNode.addEventListener('keydown', onMapPinsNodeEnterPress);
+
+    mapCardsNode.addEventListener('click', onMapCardsNodeClick);
+    mapCardsNode.addEventListener('keydown', onMapCardsNodeEnterPress);
+
   };
 
   var diactivatePinBase = function (node) {
@@ -206,26 +212,10 @@
   };
 
   //  Генерация и сборка узлов
-  mapPinsNode.appendChild(createMapPinsNode(window.data.mapPin));
-
-  //  Выбрать только сгенерированные кнопки (исключить главную кнопку из выборки)
-  mapGeneratedPins = mapPinsNode.querySelectorAll('.map__pin:not(.map__pin--main)');
-  mapGeneratedPins.forEach(hideNode);
-
-  //  Генерация предложений
-  mapCardsNode = createMapCards(window.data.mapPin);
-  mapNode.insertBefore(mapCardsNode, mapFiltersContainerNode);
-  mapGeneratedCards = mapNode.querySelectorAll('.map__card');
-  mapGeneratedCards.forEach(hideNode);
+  window.backend.load(onLoad, null);
 
   //  ИНИЦИАЛИЗАЦИЯ Событий
 
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
   mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp);
-
-  mapPinsNode.addEventListener('click', onMapPinsNodeClick);
-  mapPinsNode.addEventListener('keydown', onMapPinsNodeEnterPress);
-
-  mapCardsNode.addEventListener('click', onMapCardsNodeClick);
-  mapCardsNode.addEventListener('keydown', onMapCardsNodeEnterPress);
 })();
