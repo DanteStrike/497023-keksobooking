@@ -19,8 +19,6 @@
   var MAP_PIN_MAIN_BORDER_Y_MIN = 100;
   var MAP_PIN_MAIN_BORDER_Y_MAX = 500;
 
-  var LIVE_TIME_ERROR_MESSAGE = 1500;
-
   var mapNode = document.querySelector('.map');
 
   var mapFiltersContainerNode = mapNode.querySelector('.map__filters-container');
@@ -218,35 +216,12 @@
     mapCardsNode.addEventListener('keydown', onMapCardsNodeEnterPress);
   };
 
-  //  Стираем временное сообщение
-  var removeErrorMessage = function () {
-    var currentNodeError = document.querySelector('.ErrorMessage');
-
-    if (currentNodeError) {
-      currentNodeError.parentNode.removeChild(currentNodeError);
-    }
-  };
-
   //  Коллбек-фция при неудачной загрузке
-  var onMapPinError = function (errorMessage) {
-    var nodeError = document.createElement('div');
-
-    nodeError.classList.add('ErrorMessage');
-
-    nodeError.style.position = 'fixed';
-    nodeError.style.zIndex = '100';
-    nodeError.style.left = 0;
-    nodeError.style.right = 0;
-    nodeError.style.bottom = 0;
-    nodeError.style.margin = '0 auto';
-    nodeError.style.textAlign = 'center';
-    nodeError.style.fontSize = '20px';
-    nodeError.style.backgroundColor = 'red';
-    nodeError.textContent = errorMessage;
-
-    document.body.insertAdjacentElement('afterbegin', nodeError);
-
-    setTimeout(removeErrorMessage, LIVE_TIME_ERROR_MESSAGE);
+  var onMapPinError = function (errorType) {
+    window.data.onDefaultError(errorType, 'default', function (node, message) {
+      node.style.bottom = 0;
+      node.textContent = 'Во время загрузки данных возникли проблемы. ' + message;
+    });
   };
 
   //  Инициализация и сборка узлов

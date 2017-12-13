@@ -118,25 +118,13 @@
   };
 
   //  Коллбек-фция при неудачной отправке
-  var onNoticeFormError = function (errorMessage) {
+  var onNoticeFormError = function (errorType) {
     var nodeError = document.createElement('div');
-
-    nodeError.classList.add('ErrorMessage');
-
-    nodeError.style.position = 'fixed';
-    nodeError.style.zIndex = '100';
-    nodeError.style.left = 0;
-    nodeError.style.right = 0;
-    nodeError.style.top = 0;
-    nodeError.style.margin = '0 auto';
-    nodeError.style.textAlign = 'center';
-    nodeError.style.fontSize = '20px';
-    nodeError.style.backgroundColor = 'orange';
-    nodeError.textContent = 'Во время работы с формой возникли проблемы. ' + errorMessage;
-    noticeForm.def
-    document.body.insertAdjacentElement('afterbegin', nodeError);
-
-    setTimeout(removeErrorMessage, LIVE_TIME_ERROR_MESSAGE);
+    window.data.onDefaultError(errorType, 'default', function (node, message) {
+      node.style.top = 0;
+      node.style.backgroundColor = 'orange';
+      node.textContent = 'Во время работы с формой возникли проблемы. ' + message;
+    });
   };
 
   noticeForm.addEventListener('submit', function (evt) {
