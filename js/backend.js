@@ -1,17 +1,27 @@
 'use strict';
 
 (function () {
-  var SERVER_URL = 'https://1510.dump.academy/keksobooking';
+  var SERVER_URL = 'https://1510.dump.academy/keksobooking1';
 
   var setup = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        onLoad(xhr.response);
-      } else {
-        onError(xhr.response);
+      switch (xhr.status) {
+        case 200:
+          onLoad(xhr.response);
+          break;
+
+        case 400:
+          onError(xhr.status + ': Неверный запрос');
+          break;
+        case 404:
+          onError(xhr.status + ': Ничего не найдено');
+          break;
+
+        default:
+        onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
     xhr.addEventListener('error', function () {
@@ -21,7 +31,7 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000; // 10s
+    xhr.timeout = 10000;
 
     return xhr;
   };
