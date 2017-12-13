@@ -23,8 +23,6 @@
   var ROOMS = ['1', '2', '3', '100'];
   var CAPACITY = ['1', '2', '3', '0'];
 
-  var LIVE_TIME_ERROR_MESSAGE = 1500;
-
   var noticeForm = document.querySelector('.notice__form');
   var noticeFormTitleInput = noticeForm.querySelector('#title');
   var noticeFormAddressInput = noticeForm.querySelector('#address');
