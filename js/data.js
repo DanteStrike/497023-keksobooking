@@ -131,8 +131,7 @@
     });
   };
 
-  //  Форма ошибок схожа для формы и для карты, но имеет отличия в стилизации
-  //  Вынесена в отдельный модуль с гибкой настройкой callback-ом
+  //  Убираем сообщение через указанный интервал времени
   var removeErrorMessage = function () {
     var currentNodeError = document.querySelector('.ErrorMessage');
 
@@ -141,6 +140,8 @@
     }
   };
 
+  //  Форма ошибок схожа для формы и для карты, но имеет отличия в стилизации
+  //  Вынесена в отдельный модуль с гибкой настройкой callback-ом
   var onDefaultError = function (errorMessage, messageLifetime, callback) {
     var nodeError = document.createElement('div');
 
