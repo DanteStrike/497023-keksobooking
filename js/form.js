@@ -23,6 +23,8 @@
   var ROOMS = ['1', '2', '3', '100'];
   var CAPACITY = ['1', '2', '3', '0'];
 
+  var LIVE_TIME_ERROR_MESSAGE = 1500;
+
   var noticeForm = document.querySelector('.notice__form');
   var noticeFormTitleInput = noticeForm.querySelector('#title');
   var noticeFormAddressInput = noticeForm.querySelector('#address');
@@ -34,6 +36,31 @@
   var noticeFormCapacitySelect = noticeForm.querySelector('#capacity');
 
   var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
+
+  var onNoticeFormPriceInputInvalid = function (evt) {
+    var target = evt.target;
+
+    if (target.validity.rangeUnderflow) {
+      target.setCustomValidity('Минимальная цена = ' + target.min);
+    } else {
+      target.setCustomValidity('');
+    }
+  };
+
+  var onNoticeFormTitleInputInvalid = function (evt) {
+    //  браузер Edge не поддерживает атрибут minlength
+    var target = evt.target;
+
+    if (target.value.length < TITLE_INPUT_MIN_LENGTH) {
+      target.setCustomValidity('Имя должно состоять минимум из ' + TITLE_INPUT_MIN_LENGTH + ' символов');
+    } else if (noticeFormTitleInput.validity.tooLong) {
+      noticeFormTitleInput.setCustomValidity('Имя не должно превышать ' + TITLE_INPUT_MAX_LENGTH + ' символов');
+    } else if (noticeFormTitleInput.validity.valueMissing) {
+      noticeFormTitleInput.setCustomValidity('Обязательное поле');
+    } else {
+      noticeFormTitleInput.setCustomValidity('');
+    }
+  };
 
   var disableNoticeForm = function () {
     for (var i = 0; i < noticeFormFieldsets.length; i++) {
@@ -76,30 +103,46 @@
     noticeFormAddressInput.value = 'x: {' + coords.x + '}, y: {' + coords.y + '}';
   };
 
-  var onNoticeFormPriceInputInvalid = function (evt) {
-    var target = evt.target;
+  //  Коллбек-фция при успешной отправке
+  var onNoticeFormLoad = function () {
+    noticeForm.reset();
+  };
 
-    if (target.validity.rangeUnderflow) {
-      target.setCustomValidity('Минимальная цена = ' + target.min);
-    } else {
-      target.setCustomValidity('');
+  //  Стираем временное сообщение
+  var removeErrorMessage = function () {
+    var currentNodeError = document.querySelector('.ErrorMessage');
+
+    if (currentNodeError) {
+      currentNodeError.parentNode.removeChild(currentNodeError);
     }
   };
 
-  var onNoticeFormTitleInputInvalid = function (evt) {
-    //  браузер Edge не поддерживает атрибут minlength
-    var target = evt.target;
+  //  Коллбек-фция при неудачной отправке
+  var onNoticeFormError = function (errorMessage) {
+    var nodeError = document.createElement('div');
 
-    if (target.value.length < TITLE_INPUT_MIN_LENGTH) {
-      target.setCustomValidity('Имя должно состоять минимум из ' + TITLE_INPUT_MIN_LENGTH + ' символов');
-    } else if (noticeFormTitleInput.validity.tooLong) {
-      noticeFormTitleInput.setCustomValidity('Имя не должно превышать ' + TITLE_INPUT_MAX_LENGTH + ' символов');
-    } else if (noticeFormTitleInput.validity.valueMissing) {
-      noticeFormTitleInput.setCustomValidity('Обязательное поле');
-    } else {
-      noticeFormTitleInput.setCustomValidity('');
-    }
+    nodeError.classList.add('ErrorMessage');
+
+    nodeError.style.position = 'fixed';
+    nodeError.style.zIndex = '100';
+    nodeError.style.left = 0;
+    nodeError.style.right = 0;
+    nodeError.style.top = 0;
+    nodeError.style.margin = '0 auto';
+    nodeError.style.textAlign = 'center';
+    nodeError.style.fontSize = '20px';
+    nodeError.style.backgroundColor = 'orange';
+    nodeError.textContent = 'Во время работы с формой возникли проблемы. ' + errorMessage;
+    noticeForm.def
+    document.body.insertAdjacentElement('afterbegin', nodeError);
+
+    setTimeout(removeErrorMessage, LIVE_TIME_ERROR_MESSAGE);
   };
+
+  noticeForm.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(noticeForm), onNoticeFormLoad, onNoticeFormError);
+    evt.preventDefault();
+  });
 
   disableNoticeForm();
   initInputsSelectsAttributes();
