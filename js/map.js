@@ -26,7 +26,6 @@
   var mapPinMain = mapPinsNode.querySelector('.map__pin--main');
   var mapLoadedPins;
   var mapLoadedCards;
-  var mapCardsNode;
 
   var diactivatePinBase = function (node) {
     var offerIndex;
@@ -199,7 +198,7 @@
 
     //  Формируем из скачанных данных DOM-ы Предложений
     mapCardsNode.className = 'map__cards';
-    for (var i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) {
       mapCardsNode.appendChild(window.card.buildMapCard(arrayMapPins[i]));
     }
     mapNode.insertBefore(mapCardsNode, mapFiltersContainerNode);

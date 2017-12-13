@@ -21,7 +21,7 @@
           break;
 
         default:
-        onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);
+          onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
     xhr.addEventListener('error', function () {

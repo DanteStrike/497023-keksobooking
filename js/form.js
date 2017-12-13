@@ -106,18 +106,8 @@
     noticeForm.reset();
   };
 
-  //  Стираем временное сообщение
-  var removeErrorMessage = function () {
-    var currentNodeError = document.querySelector('.ErrorMessage');
-
-    if (currentNodeError) {
-      currentNodeError.parentNode.removeChild(currentNodeError);
-    }
-  };
-
   //  Коллбек-фция при неудачной отправке
   var onNoticeFormError = function (errorType) {
-    var nodeError = document.createElement('div');
     window.data.onDefaultError(errorType, 'default', function (node, message) {
       node.style.top = 0;
       node.style.backgroundColor = 'orange';
