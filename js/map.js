@@ -14,8 +14,10 @@
   //  Учитывая псевдоэлемент
   var MAP_PIN_MAIN_HEIGTH = 80;
 
-  var MAP_PIN_MAIN_BORDER_X_MIN = 300;
-  var MAP_PIN_MAIN_BORDER_X_MAX = 900;
+  var MAP_PIN_MAIN_WIDTH = 80;
+
+  var MAP_PIN_MAIN_BORDER_X_MIN = 0;
+  var MAP_PIN_MAIN_BORDER_X_MAX = 1200;
   var MAP_PIN_MAIN_BORDER_Y_MIN = 100;
   var MAP_PIN_MAIN_BORDER_Y_MAX = 500;
 
@@ -115,7 +117,7 @@
       //  Реверсируем ось Y
       var newTargetCoordsOnMap = {
         y: mapNode.clientHeight - MAP_PIN_MAIN_HEIGTH - newTargetCoords.y - pageYOffset - 0.5,
-        x: newTargetCoords.x - mapNode.clientLeft - pageXOffset
+        x: newTargetCoords.x - MAP_PIN_MAIN_WIDTH / 2 - mapNode.clientLeft - pageXOffset
       };
 
       if (newTargetCoordsOnMap.x >= MAP_PIN_MAIN_BORDER_X_MIN && newTargetCoordsOnMap.x <= MAP_PIN_MAIN_BORDER_X_MAX && newTargetCoordsOnMap.y >= MAP_PIN_MAIN_BORDER_Y_MIN && newTargetCoordsOnMap.y <= MAP_PIN_MAIN_BORDER_Y_MAX) {
