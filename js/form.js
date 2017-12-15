@@ -15,7 +15,13 @@
     'palace': 1000000
   };
 
-  var priceInputMin = PRICE_INPUT_MIN_DEFAULT;
+  var ROOM_TYPES = ['flat', 'bungalo', 'house', 'palace'];
+
+  var TIMES_IN = ['12:00', '13:00', '14:00'];
+  var TIMES_OUT = ['12:00', '13:00', '14:00'];
+
+  var ROOMS = ['1', '2', '3', '100'];
+  var CAPACITY = ['1', '2', '3', '0'];
 
   var noticeForm = document.querySelector('.notice__form');
   var noticeFormTitleInput = noticeForm.querySelector('#title');
@@ -58,39 +64,23 @@
     noticeFormCapacitySelect.value = noticeFormRoomstSelect.value;
   };
 
+  var syncValues = function (element, value) {
+    element.value = value;
+  };
+
+  var syncValueWithMin = function (element, value) {
+    element.min = value;
+  };
+
   var changeNoticeFormAddressInput = function (coords) {
     noticeFormAddressInput.value = 'x: {' + coords.x + '}, y: {' + coords.y + '}';
-  };
-
-  var onNoticeFormTimeInSelectChange = function () {
-    noticeFormTimeOutSelect.value = noticeFormTimeInSelect.value;
-  };
-
-  var onNoticeFormTimeOutSelectChange = function () {
-    noticeFormTimeInSelect.value = noticeFormTimeOutSelect.value;
-  };
-
-  var onNoticeFormRoomstSelectChange = function () {
-
-    //  Несостыковка значений value у разных селекторов
-    if (noticeFormRoomstSelect.value === '100') {
-      noticeFormCapacitySelect.value = 0;
-    } else {
-      noticeFormCapacitySelect.value = noticeFormRoomstSelect.value;
-    }
-  };
-
-  var onNoticeFormTypeSelectChange = function (evt) {
-    var selectedValue = evt.target.value;
-
-    priceInputMin = PRICE_INPUT_MIN_TYPES[selectedValue];
   };
 
   var onNoticeFormPriceInputInvalid = function (evt) {
     var target = evt.target;
 
-    if (target.value < priceInputMin) {
-      target.setCustomValidity('Минимальная цена = ' + priceInputMin);
+    if (target.validity.rangeUnderflow) {
+      target.setCustomValidity('Минимальная цена = ' + target.min);
     } else {
       target.setCustomValidity('');
     }
@@ -114,10 +104,11 @@
   disableNoticeForm();
   initInputsSelectsAttributes();
 
-  noticeFormTimeInSelect.addEventListener('change', onNoticeFormTimeInSelectChange);
-  noticeFormTimeOutSelect.addEventListener('change', onNoticeFormTimeOutSelectChange);
-  noticeFormTypeSelect.addEventListener('change', onNoticeFormTypeSelectChange);
-  noticeFormRoomstSelect.addEventListener('change', onNoticeFormRoomstSelectChange);
+  window.synchronizeFields(noticeFormTimeInSelect, noticeFormTimeOutSelect, TIMES_IN, TIMES_OUT, syncValues);
+  window.synchronizeFields(noticeFormTimeOutSelect, noticeFormTimeInSelect, TIMES_OUT, TIMES_IN, syncValues);
+
+  window.synchronizeFields(noticeFormTypeSelect, noticeFormPriceInput, ROOM_TYPES, PRICE_INPUT_MIN_TYPES, syncValueWithMin);
+  window.synchronizeFields(noticeFormRoomstSelect, noticeFormCapacitySelect, ROOMS, CAPACITY, syncValues);
 
   noticeFormPriceInput.addEventListener('invalid', onNoticeFormPriceInputInvalid);
   noticeFormTitleInput.addEventListener('invalid', onNoticeFormTitleInputInvalid);
