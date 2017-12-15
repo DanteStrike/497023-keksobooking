@@ -98,7 +98,7 @@
   };
 
   var changeNoticeFormAddressInput = function (coords) {
-    noticeFormAddressInput.value = 'x: {' + coords.x + '}, y: {' + coords.y + '}';
+    noticeFormAddressInput.value = 'x: {' + Math.round(coords.x) + '}, y: {' + Math.round(coords.y) + '}';
   };
 
   //  Коллбек-фция при успешной отправке

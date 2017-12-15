@@ -114,7 +114,7 @@
       //  Пересчитываем координаты относительно новой оси (левый нижний угол карты)
       //  Реверсируем ось Y
       var newTargetCoordsOnMap = {
-        y: mapNode.clientHeight - MAP_PIN_MAIN_HEIGTH - newTargetCoords.y - pageYOffset,
+        y: mapNode.clientHeight - MAP_PIN_MAIN_HEIGTH - newTargetCoords.y - pageYOffset - 0.5,
         x: newTargetCoords.x - mapNode.clientLeft - pageXOffset
       };
 
