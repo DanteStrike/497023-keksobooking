@@ -1,15 +1,13 @@
 'use strict';
 
 (function () {
-  var OFFER_AVAILABLE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-
   //  Функция, путем удаления, убирает все недоступные 'удобства' из узла, которых нет в массиве (features)
   //  node (object) - узел содержащий ВСЕ возможные удобства
   //  features (object) - массив текущих удобств
   var buildMapCardFeatures = function (node, features) {
-    for (var i = 0; i < OFFER_AVAILABLE_FEATURES.length; i++) {
-      if (features.indexOf(OFFER_AVAILABLE_FEATURES[i]) === -1) {
-        node.removeChild(node.querySelector('.feature--' + OFFER_AVAILABLE_FEATURES[i]));
+    for (var i = 0; i < window.utility.offerAvailableFeatures.length; i++) {
+      if (features.indexOf(window.utility.offerAvailableFeatures[i]) === -1) {
+        node.removeChild(node.querySelector('.feature--' + window.utility.offerAvailableFeatures[i]));
       }
     }
   };
@@ -65,7 +63,7 @@
   };
 
   var onMapCardEnterPress = function (evt) {
-    if (evt.keyCode === window.map.enterKeyCode) {
+    if (evt.keyCode === window.utility.enterKeyCode) {
       onMapCardClick(evt);
     }
   };

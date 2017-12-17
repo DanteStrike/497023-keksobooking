@@ -1,0 +1,57 @@
+'use strict';
+
+(function () {
+  var OFFER_AVAILABLE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+  var LIVE_TIME_ERROR_MESSAGE = 1500;
+
+  var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
+
+  //  Форма ошибок схожа для формы и для карты, но имеет отличия в стилизации
+  //  Вынесена в отдельный модуль с гибкой настройкой callback-ом
+  var onDefaultError = function (errorMessage, messageLifetime, callback) {
+    //  Убираем сообщение через указанный интервал времени
+    var removeErrorMessage = function () {
+      var currentNodeError = document.querySelector('.ErrorMessage');
+
+      if (currentNodeError) {
+        currentNodeError.parentNode.removeChild(currentNodeError);
+      }
+    };
+
+    var nodeError = document.createElement('div');
+
+    if (!messageLifetime || messageLifetime === 'default') {
+      messageLifetime = LIVE_TIME_ERROR_MESSAGE;
+    }
+
+    nodeError.classList.add('ErrorMessage');
+
+    //  Дефолтные настройки
+    nodeError.style.position = 'fixed';
+    nodeError.style.zIndex = '100';
+    nodeError.style.left = 0;
+    nodeError.style.right = 0;
+    nodeError.style.margin = '0 auto';
+    nodeError.style.textAlign = 'center';
+    nodeError.style.fontSize = '20px';
+    nodeError.style.backgroundColor = 'red';
+    nodeError.textContent = errorMessage;
+
+    //  Гибкая кастомизация сообщения ошибки
+    if (typeof callback === 'function') {
+      callback(nodeError, errorMessage);
+    }
+
+    document.body.insertAdjacentElement('afterbegin', nodeError);
+
+    setTimeout(removeErrorMessage, messageLifetime);
+  };
+
+  window.utility = {
+    offerAvailableFeatures: OFFER_AVAILABLE_FEATURES,
+    onDefaultError: onDefaultError,
+    enterKeyCode: ENTER_KEYCODE,
+    escKeycode: ESC_KEYCODE
+  };
+})();

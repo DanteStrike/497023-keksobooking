@@ -108,7 +108,7 @@
 
   //  Коллбек-фция при неудачной отправке
   var onNoticeFormError = function (errorType) {
-    window.data.onDefaultError(errorType, 'default', function (node, message) {
+    window.utility.onDefaultError(errorType, 'default', function (node, message) {
       node.style.top = 0;
       node.style.backgroundColor = 'orange';
       node.textContent = 'Во время работы с формой возникли проблемы. ' + message;

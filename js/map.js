@@ -5,11 +5,8 @@
 //    pin.js — модуль для отрисовки пина и взаимодействия с ним
 
 (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
-
   //  Ограничитель кол-ва кнопок
-  var MAP_PIN_MAX_LIMIT = 10;
+  var MAP_PIN_MAX_LIMIT = 5;
 
   //  Учитывая псевдоэлемент
   var MAP_PIN_MAIN_WIDTH = 80;
@@ -23,7 +20,13 @@
   var mapNode = document.querySelector('.map');
 
   var mapFiltersContainerNode = mapNode.querySelector('.map__filters-container');
-  var mapFiltersForm = mapFiltersContainerNode.querySelector('.map__filters')
+  var mapFiltersForm = mapFiltersContainerNode.querySelector('.map__filters');
+  var mapFilterType = mapFiltersForm.querySelector('#housing-type');
+  var mapFilterPrice = mapFiltersForm.querySelector('#housing-price');
+  var mapFilterRooms = mapFiltersForm.querySelector('#housing-rooms');
+  var mapFilterGuests = mapFiltersForm.querySelector('#housing-guests');
+  var mapFilterFeatures = mapFiltersForm.querySelector('#housing-features');
+
   var mapPinsNode = mapNode.querySelector('.map__pins');
   var mapPinMain = mapPinsNode.querySelector('.map__pin--main');
 
@@ -37,18 +40,18 @@
 
   var onMapEscPress = function (evt) {
     var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
-    if (evt.keyCode === ESC_KEYCODE && window.pin.disablePin()) {
+    if (evt.keyCode === window.utility.escKeyCode && window.pin.disablePin()) {
       window.card.hideCard(mapPinActive, mapPins)
     }
+  };
+
+  var showNode = function (node) {
+    node.style.display = '';
   };
 
   //  КЛИКИ
 
   var onMapPinMainMouseUp = function () {
-    var showNode = function (node) {
-      node.style.display = '';
-    };
-
     mapNode.classList.remove('map--faded');
     mapPins.forEach(showNode);
     window.form.enableNoticeForm();
@@ -134,18 +137,18 @@
   //  Коллбек-фция при успешной загрузке
   var onMapPinLoad = function (arrayMapPins) {
     mapPinsCards = arrayMapPins;
-    renderMapPin(mapPinsCards);
+    renderMapPins(mapPinsCards);
   };
 
   //  Коллбек-фция при неудачной загрузке
   var onMapPinError = function (errorType) {
-    window.data.onDefaultError(errorType, 'default', function (node, message) {
+    window.utility.onDefaultError(errorType, 'default', function (node, message) {
       node.style.bottom = 0;
       node.textContent = 'Во время загрузки данных возникли проблемы. ' + message;
     });
   };
 
-  var renderMapPin = function (array) {
+  var renderMapPins = function (array) {
     var removeNode = function (node) {
       node.remove();
     }
@@ -196,6 +199,12 @@
   window.backend.load(onMapPinLoad, onMapPinError);
 
   var onMapFiltersFormChange = function () {
+    var filterType = function (element) {
+      return mapFilterType.value !== 'any' ? element.offer.type === mapFilterType.value : true;
+    }
+
+    renderMapPins(mapPinsCards.filter(filterType));
+    mapPins.forEach(showNode);
 
   };
 
@@ -206,7 +215,5 @@
 
   window.map = {
     onMapEscPress: onMapEscPress,
-    enterKeyCode: ENTER_KEYCODE,
-    escKeycode: ESC_KEYCODE
   };
 })();

@@ -13,8 +13,6 @@
   var MAP_PIN_Y_MIN = 100;
   var MAP_PIN_Y_MAX = 500;
 
-  var LIVE_TIME_ERROR_MESSAGE = 1500;
-
   //  Константы для описания предложения
   var OFFER_TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
   var OFFER_PRICE_MIN = 1000;
@@ -25,7 +23,6 @@
   var OFFER_GUESTS_MIN = 1;
   var OFFER_GUESTS_MAX = 5;
   var OFFER_CHECK_TIMES = ['12:00', '13:00', '14:00'];
-  var OFFER_AVAILABLE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
   //  Функция генерирует случайное целое число в промежутке от min до max
   //  min, max (int)
@@ -107,7 +104,7 @@
       guests: getRandomInt(OFFER_GUESTS_MIN, OFFER_GUESTS_MAX),
       checkin: OFFER_CHECK_TIMES[getRandomInt(0, OFFER_CHECK_TIMES.length)],
       checkout: OFFER_CHECK_TIMES[getRandomInt(0, OFFER_CHECK_TIMES.length)],
-      features: generateRandomArray(OFFER_AVAILABLE_FEATURES, 'random'),
+      features: generateRandomArray(window.utility.offerAvailableFeatures, 'random'),
       description: [],
       photos: []
     };
@@ -130,49 +127,7 @@
     });
   };
 
-  //  Убираем сообщение через указанный интервал времени
-  var removeErrorMessage = function () {
-    var currentNodeError = document.querySelector('.ErrorMessage');
-
-    if (currentNodeError) {
-      currentNodeError.parentNode.removeChild(currentNodeError);
-    }
-  };
-
-  //  Форма ошибок схожа для формы и для карты, но имеет отличия в стилизации
-  //  Вынесена в отдельный модуль с гибкой настройкой callback-ом
-  var onDefaultError = function (errorMessage, messageLifetime, callback) {
-    var nodeError = document.createElement('div');
-
-    if (!messageLifetime || messageLifetime === 'default') {
-      messageLifetime = LIVE_TIME_ERROR_MESSAGE;
-    }
-
-    nodeError.classList.add('ErrorMessage');
-
-    //  Дефолтные настройки
-    nodeError.style.position = 'fixed';
-    nodeError.style.zIndex = '100';
-    nodeError.style.left = 0;
-    nodeError.style.right = 0;
-    nodeError.style.margin = '0 auto';
-    nodeError.style.textAlign = 'center';
-    nodeError.style.fontSize = '20px';
-    nodeError.style.backgroundColor = 'red';
-    nodeError.textContent = errorMessage;
-
-    //  Гибкая кастомизация сообщения ошибки
-    if (typeof callback === 'function') {
-      callback(nodeError, errorMessage);
-    }
-
-    document.body.insertAdjacentElement('afterbegin', nodeError);
-
-    setTimeout(removeErrorMessage, messageLifetime);
-  };
-
   window.data = {
     mapPin: generateMapPins(MAP_PIN_COUNT),
-    onDefaultError: onDefaultError
   };
 })();
