@@ -12,9 +12,8 @@
   var MAP_PIN_MAX_LIMIT = 10;
 
   //  Учитывая псевдоэлемент
-  var MAP_PIN_MAIN_HEIGTH = 80;
-
   var MAP_PIN_MAIN_WIDTH = 80;
+  var MAP_PIN_MAIN_HEIGTH = 80;
 
   var MAP_PIN_MAIN_BORDER_X_MIN = 0;
   var MAP_PIN_MAIN_BORDER_X_MAX = 1200;
@@ -29,49 +28,22 @@
   var mapLoadedPins;
   var mapLoadedCards;
 
-  var diactivatePinBase = function (node) {
-    var offerIndex;
-
-    //  Поиск индекса активной кнопки относительно массива всех сгенерированных кнопок
-    //  Для определения соответствующей этой кнопке предложения
-    node.classList.remove('map__pin--active');
-    offerIndex = [].indexOf.call(mapLoadedPins, node);
-    hideNode(mapLoadedCards[offerIndex]);
-  };
-
-  //  Переключатели видимости узла
-  var hideNode = function (node) {
-    node.style.display = 'none';
-  };
-
-  var showNode = function (node) {
-    node.style.display = '';
-  };
-
   //  НАЖАТИЯ
 
   var onMapEscPress = function (evt) {
     var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
-    if (evt.keyCode === ESC_KEYCODE && mapPinActive) {
-      diactivatePinBase(mapPinActive);
-    }
-  };
-
-  var onMapPinsNodeEnterPress = function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      onMapPinsNodeClick(evt);
-    }
-  };
-
-  var onMapCardsNodeEnterPress = function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      onMapCardsNodeClick(evt);
+    if (evt.keyCode === ESC_KEYCODE && window.pin.disablePin()) {
+      window.card.hideCard(mapPinActive, mapLoadedPins)
     }
   };
 
   //  КЛИКИ
 
   var onMapPinMainMouseUp = function () {
+    var showNode = function (node) {
+      node.style.display = '';
+    };
+
     mapNode.classList.remove('map--faded');
     mapLoadedPins.forEach(showNode);
     window.form.enableNoticeForm();
@@ -99,6 +71,14 @@
       x: mouseStartCoords.x - targetCoords.x,
       y: mouseStartCoords.y - targetCoords.y
     };
+
+    //  Вывод положения мыши в форму не дожидаясь перемещения, так как перемещения может и не произайти!
+    var currentTargetCoordsOnMap = {
+      y: mapNode.clientHeight - MAP_PIN_MAIN_HEIGTH - targetCoords.y - pageYOffset - 0.5,
+      x: targetCoords.x - MAP_PIN_MAIN_WIDTH / 2 - mapNode.clientLeft - pageXOffset
+    };
+
+    window.form.changeNoticeFormAddressInput(currentTargetCoordsOnMap);
 
     var onPinMainMouseMove = function (moveEvt) {
       //  Текущие координаты мышки
@@ -146,39 +126,6 @@
     document.addEventListener('mouseup', onPinMainMouseUp);
   };
 
-  //  Делегирование на всплытии
-  var onMapPinsNodeClick = function (evt) {
-    // Переключить фокус, если необходимо. target - img, его родитель button
-    var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
-    var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
-
-    if (target.className === 'map__pin') {
-      if (mapPinActive) {
-        diactivatePinBase(mapPinActive);
-      }
-
-      target.classList.add('map__pin--active');
-
-      window.showCard(target, mapLoadedPins);
-
-      document.addEventListener('keydown', onMapEscPress);
-    }
-  };
-
-  //  Делегирование на всплытии
-  var onMapCardsNodeClick = function (evt) {
-    var target = evt.target;
-    var pinIndex;
-
-    if (target.classList.contains('popup__close')) {
-      hideNode(target.parentNode);
-      pinIndex = [].indexOf.call(mapLoadedCards, target.parentNode);
-      mapLoadedPins[pinIndex].classList.remove('map__pin--active');
-
-      document.removeEventListener('keydown', onMapEscPress);
-    }
-  };
-
   //  Коллбек-фция при успешной загрузке
   var onMapPinLoad = function (arrayMapPins) {
     var fragment = document.createDocumentFragment();
@@ -196,7 +143,6 @@
 
     //  Выбираем все Кнопки, кроме главной
     mapLoadedPins = mapPinsNode.querySelectorAll('.map__pin:not(.map__pin--main)');
-    mapLoadedPins.forEach(hideNode);
 
     //  Формируем из скачанных данных DOM-ы Предложений
     mapCardsNode.className = 'map__cards';
@@ -207,14 +153,10 @@
 
     //  Выбираем все предложения
     mapLoadedCards = mapCardsNode.childNodes;
-    mapLoadedCards.forEach(hideNode);
 
     //  События должны срабатывать только после полного скачивания и формирования DOM-ов
-    mapPinsNode.addEventListener('click', onMapPinsNodeClick);
-    mapPinsNode.addEventListener('keydown', onMapPinsNodeEnterPress);
-
-    mapCardsNode.addEventListener('click', onMapCardsNodeClick);
-    mapCardsNode.addEventListener('keydown', onMapCardsNodeEnterPress);
+    mapLoadedPins.forEach(window.pin.initializeMapPinEvent);
+    mapLoadedCards.forEach(window.card.initializeMapCardEvent)
   };
 
   //  Коллбек-фция при неудачной загрузке
@@ -230,4 +172,10 @@
 
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
   mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp);
+
+  window.map = {
+    onMapEscPress: onMapEscPress,
+    enterKeyCode: ENTER_KEYCODE,
+    escKeycode: ESC_KEYCODE
+  };
 })();
