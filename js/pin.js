@@ -32,6 +32,14 @@
     }
   };
 
+  var hidePin = function (pin) {
+    pin.style.display = 'none';
+  };
+
+  var showPin = function (pin) {
+    pin.style.display = '';
+  };
+
   var onMapPinClick = function (evt) {
     // Переключить фокус, если необходимо. target - img, его родитель button
     var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;

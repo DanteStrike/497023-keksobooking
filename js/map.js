@@ -23,17 +23,22 @@
   var mapNode = document.querySelector('.map');
 
   var mapFiltersContainerNode = mapNode.querySelector('.map__filters-container');
+  var mapFiltersForm = mapFiltersContainerNode.querySelector('.map__filters')
   var mapPinsNode = mapNode.querySelector('.map__pins');
   var mapPinMain = mapPinsNode.querySelector('.map__pin--main');
-  var mapLoadedPins;
-  var mapLoadedCards;
+
+  var mapPins;
+  var mapCards;
+
+  //  Сохраняем данные
+  var mapPinsCards;
 
   //  НАЖАТИЯ
 
   var onMapEscPress = function (evt) {
     var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
     if (evt.keyCode === ESC_KEYCODE && window.pin.disablePin()) {
-      window.card.hideCard(mapPinActive, mapLoadedPins)
+      window.card.hideCard(mapPinActive, mapPins)
     }
   };
 
@@ -45,7 +50,7 @@
     };
 
     mapNode.classList.remove('map--faded');
-    mapLoadedPins.forEach(showNode);
+    mapPins.forEach(showNode);
     window.form.enableNoticeForm();
   };
 
@@ -128,35 +133,8 @@
 
   //  Коллбек-фция при успешной загрузке
   var onMapPinLoad = function (arrayMapPins) {
-    var fragment = document.createDocumentFragment();
-    var mapCardsNode = document.createElement('div');
-    var count = MAP_PIN_MAX_LIMIT;
-
-    if (count > arrayMapPins.length) {
-      count = arrayMapPins.length;
-    }
-    //  Формируем из скачанных данных DOM-ы Кнопок на карте
-    for (var i = 0; i < count; i++) {
-      fragment.appendChild(window.pin.buildMapPinNode(arrayMapPins[i], mapNode.clientHeight));
-    }
-    mapPinsNode.appendChild(fragment);
-
-    //  Выбираем все Кнопки, кроме главной
-    mapLoadedPins = mapPinsNode.querySelectorAll('.map__pin:not(.map__pin--main)');
-
-    //  Формируем из скачанных данных DOM-ы Предложений
-    mapCardsNode.className = 'map__cards';
-    for (i = 0; i < count; i++) {
-      mapCardsNode.appendChild(window.card.buildMapCard(arrayMapPins[i]));
-    }
-    mapNode.insertBefore(mapCardsNode, mapFiltersContainerNode);
-
-    //  Выбираем все предложения
-    mapLoadedCards = mapCardsNode.childNodes;
-
-    //  События должны срабатывать только после полного скачивания и формирования DOM-ов
-    mapLoadedPins.forEach(window.pin.initializeMapPinEvent);
-    mapLoadedCards.forEach(window.card.initializeMapCardEvent)
+    mapPinsCards = arrayMapPins;
+    renderMapPin(mapPinsCards);
   };
 
   //  Коллбек-фция при неудачной загрузке
@@ -167,8 +145,61 @@
     });
   };
 
+  var renderMapPin = function (array) {
+    var removeNode = function (node) {
+      node.remove();
+    }
+
+    var mapCardsNode = document.querySelector('map__cards');
+    var fragment = document.createDocumentFragment();
+    var count = MAP_PIN_MAX_LIMIT;
+
+    //  Убрать старое
+    if (mapPins) {
+      mapPins.forEach(removeNode);
+    }
+
+    if (mapCardsNode) {
+      removeNode(mapCardsNode);
+    }
+
+    //  Сформировать новое
+    if (count > array.length) {
+      count = array.length;
+    }
+    //  Формируем DOM-ы Кнопок на карте
+    for (var i = 0; i < count; i++) {
+      fragment.appendChild(window.pin.buildMapPinNode(array[i], mapNode.clientHeight));
+    }
+    mapPinsNode.appendChild(fragment);
+
+    //  Выбираем все Кнопки, кроме главной
+    mapPins = mapPinsNode.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+    //  Формируем DOM-ы Предложений
+    mapCardsNode = document.createElement('div');
+    mapCardsNode.className = 'map__cards';
+    for (i = 0; i < count; i++) {
+      mapCardsNode.appendChild(window.card.buildMapCard(array[i]));
+    }
+    mapNode.insertBefore(mapCardsNode, mapFiltersContainerNode);
+
+    //  Выбираем все предложения
+    mapCards = mapCardsNode.querySelectorAll('.map__card');
+
+    //  События должны срабатывать только после полного формирования DOM-ов
+    mapPins.forEach(window.pin.initializeMapPinEvent);
+    mapCards.forEach(window.card.initializeMapCardEvent);
+  };
+
   //  Инициализация и сборка узлов
   window.backend.load(onMapPinLoad, onMapPinError);
+
+  var onMapFiltersFormChange = function () {
+
+  };
+
+  mapFiltersForm.addEventListener('change', onMapFiltersFormChange);
 
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
   mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp);
