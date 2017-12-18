@@ -38,7 +38,7 @@
   };
 
   //  Функция перемешивает случайным образом массив source
-  //  count - кол-во элментов в возвращаемом массиве. Если не указан то count = source.length
+  //  count - кол-во элементов в возвращаемом массиве. Если не указан то count = source.length
   //  count = 'random' - то возвращаемый массив обрезается по случайной длине.
   //  return randomArray (object)
   var generateRandomArray = function (source, count, callback) {

@@ -9,7 +9,7 @@
   var MAP_PIN_MAX_LIMIT = 5;
 
   //  deltaY = 22(псевдоэлемент - указатель) + 62 / 2 (фактическая высота кнопки без псевдоэлемента) - 2 (translateY (-2px)) - 3
-  //  картинка смещена относительно обертки, style.top приминяется к обертке ==> необходимо учитывать translateY
+  //  картинка смещена относительно обертки, style.top применяется к обертке ==> необходимо учитывать translateY
   //  размер обертки кнопки = 65, размер кнопки без указателя = 62 ===> необходимо учитывать компенсацию = 3
   //  фактическая высота кнопки делится на два, так как еще смещена кнопка (translate (-50%, -50%)) ==> по X дельту можно не учитывать, но по Y необходимо!
   var MAP_PIN_MAIN_TOP_DELTA = 62 / 2 + 22 - 2 - 3;
@@ -183,7 +183,7 @@
         y: moveEvt.clientY
       };
 
-      //  Предпологаемое положение кнопки по Y
+      //  Предполагаемое положение кнопки по Y
       var newTargetCoords = {
         x: mouseMoveCoords.x - mouseTargetPosition.x,
         y: mouseMoveCoords.y - mouseTargetPosition.y
@@ -202,7 +202,7 @@
 
         window.form.changeNoticeFormAddressInput(newTargetCoordsOnMap);
 
-        //  Неопходимо переопределить текущее положение кнопки, так как произашел сдвиг эл-та
+        //  Необходимо переопределить текущее положение кнопки, так как произошел сдвиг эл-та
         targetCoords = {
           x: target.getBoundingClientRect().left,
           y: target.getBoundingClientRect().top
@@ -223,7 +223,7 @@
     var mouseTargetPosition;
     var currentTargetCoordsOnMap;
 
-    //  При первоночальном запуске страницы кнопку закрывает svg
+    //  При первоначальном запуске страницы кнопку закрывает svg
     if (evt.target.parentNode.tagName === 'svg') {
 
       //  Переключить фокус на main pin button
@@ -253,7 +253,7 @@
       y: mouseStartCoords.y - targetCoords.y
     };
 
-    //  Вывод положения мыши в форму не дожидаясь перемещения, так как перемещения может и не произайти!
+    //  Вывод положения мыши в форму не дожидаясь перемещения, так как перемещения может и не произойти!
     currentTargetCoordsOnMap = {
       x: target.offsetLeft,
       y: mapNode.offsetHeight - (target.offsetTop + MAP_PIN_MAIN_TOP_DELTA)
