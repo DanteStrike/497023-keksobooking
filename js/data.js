@@ -82,12 +82,12 @@
     return randomArray;
   };
 
-  //  Функция собирает объект mapPin
-  //  mapPin - сложный объект состоящий из 3-х других простых объектов (objAuthor, objOffer, objLocation)
+  //  Функция собирает объект mapPinCard
+  //  mapPinCard - сложный объект состоящий из 3-х других простых объектов (objAuthor, objOffer, objLocation)
   //  avatarNumber (int) - номер картинки аватарки
   //  offerTitel (string) - заголовок предложения
   //  return pin (obj)
-  var createMapPin = function (avatarNumber, offerTitel) {
+  var createmapPinCard = function (avatarNumber, offerTitel) {
     var objAuthor = {
       avatar: 'img/avatars/user0' + avatarNumber.toString() + '.png'
     };
@@ -108,26 +108,26 @@
       description: [],
       photos: []
     };
-    var mapPin = {
+    var mapPinCard = {
       author: objAuthor,
       offer: objOffer,
       location: objLocation
     };
 
-    return mapPin;
+    return mapPinCard;
   };
 
-  //  Функция генерирует массив объектов mapPin
+  //  Функция генерирует массив объектов mapPinCard
   //  count (int) - кол-во чисел (или максимальное число последовательности)
-  //  return arrayMapPins (object)
-  var generateMapPins = function (count) {
+  //  return arraymapPinCards (object)
+  var generatemapPinCards = function (count) {
     var offerTitles = generateRandomArray(OFFER_TITLES);
     return generateRandomArray(offerTitles, count, function (value, index, random) {
-      return createMapPin(random + 1, value);
+      return createmapPinCard(random + 1, value);
     });
   };
 
   window.data = {
-    mapPin: generateMapPins(MAP_PIN_COUNT),
+    mapPinCards: generatemapPinCards(MAP_PIN_COUNT),
   };
 })();
