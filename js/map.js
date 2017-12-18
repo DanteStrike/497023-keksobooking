@@ -11,10 +11,11 @@
   //  Ограничитель кол-ва кнопок
   var MAP_PIN_MAX_LIMIT = 10;
 
-  //  Учитывая псевдоэлемент
-  var MAP_PIN_MAIN_HEIGTH = 80;
-
-  var MAP_PIN_MAIN_WIDTH = 80;
+  //  deltaY = 22(псевдоэлемент - указатель) + 62 / 2 (фактическая высота кнопки без псевдоэлемента) - 2 (translateY (-2px)) - 3
+  //  картинка смещена относительно обертки, style.top приминяется к обертке ==> необходимо учитывать translateY
+  //  размер обертки кнопки = 65, размер кнопки без указателя = 62 ===> необходимо учитывать компенсацию = 3
+  //  фактическая высота кнопки делится на два, так как еще смещена кнопка (translate (-50%, -50%)) ==> по X дельту можно не учитывать, но по Y необходимо!
+  var MAP_PIN_MAIN_TOP_DELTA = 62 / 2 + 22 - 2 - 3;
 
   var MAP_PIN_MAIN_BORDER_X_MIN = 0;
   var MAP_PIN_MAIN_BORDER_X_MAX = 1200;
@@ -116,8 +117,8 @@
       //  Пересчитываем координаты относительно новой оси (левый нижний угол карты)
       //  Реверсируем ось Y
       var newTargetCoordsOnMap = {
-        y: mapNode.clientHeight - MAP_PIN_MAIN_HEIGTH - newTargetCoords.y - pageYOffset - 0.5,
-        x: newTargetCoords.x - MAP_PIN_MAIN_WIDTH / 2 - mapNode.clientLeft - pageXOffset
+        x: target.offsetLeft + newTargetCoords.x - targetCoords.x,
+        y: mapNode.offsetHeight - (target.offsetTop + MAP_PIN_MAIN_TOP_DELTA + (newTargetCoords.y - targetCoords.y))
       };
 
       if (newTargetCoordsOnMap.x >= MAP_PIN_MAIN_BORDER_X_MIN && newTargetCoordsOnMap.x <= MAP_PIN_MAIN_BORDER_X_MAX && newTargetCoordsOnMap.y >= MAP_PIN_MAIN_BORDER_Y_MIN && newTargetCoordsOnMap.y <= MAP_PIN_MAIN_BORDER_Y_MAX) {
