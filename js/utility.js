@@ -3,6 +3,7 @@
 (function () {
   var OFFER_AVAILABLE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var LIVE_TIME_ERROR_MESSAGE = 1500;
+  var DEBOUNCE_INTERVAL = 500; // ms
 
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
@@ -48,9 +49,18 @@
     setTimeout(removeErrorMessage, messageLifetime);
   };
 
+  var lastTimeout;
+  var debounce = function (func) {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(func, DEBOUNCE_INTERVAL);
+  }
+
   window.utility = {
     offerAvailableFeatures: OFFER_AVAILABLE_FEATURES,
     onDefaultError: onDefaultError,
+    debounce: debounce,
     enterKeyCode: ENTER_KEYCODE,
     escKeycode: ESC_KEYCODE
   };
