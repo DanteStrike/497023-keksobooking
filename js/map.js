@@ -176,36 +176,6 @@
   };
 
   var onMapPinMainMouseDown = function (evt) {
-    // Переключить фокус, если необходимо. target - img, его родитель button
-    var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
-
-    //  Координаты кнопки в нулевой момент
-    var targetCoords = {
-      x: target.getBoundingClientRect().left,
-      y: target.getBoundingClientRect().top
-    };
-
-    //  Координаты мышки в нулевой момент
-    var mouseStartCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
-
-    //  Положение мыши относительно кнопки в нулевой момент,
-    //  величина постоянная до отжатия кнопки мышки
-    var mouseTargetPosition = {
-      x: mouseStartCoords.x - targetCoords.x,
-      y: mouseStartCoords.y - targetCoords.y
-    };
-
-    //  Вывод положения мыши в форму не дожидаясь перемещения, так как перемещения может и не произайти!
-    var currentTargetCoordsOnMap = {
-      x: target.offsetLeft,
-      y: mapNode.offsetHeight - (target.offsetTop + MAP_PIN_MAIN_TOP_DELTA)
-    };
-
-    window.form.changeNoticeFormAddressInput(currentTargetCoordsOnMap);
-
     var onPinMainMouseMove = function (moveEvt) {
       //  Текущие координаты мышки
       var mouseMoveCoords = {
@@ -246,6 +216,50 @@
       document.removeEventListener('mousemove', onPinMainMouseMove);
       document.removeEventListener('mouseup', onPinMainMouseUp);
     };
+
+    var target;
+    var targetCoords;
+    var mouseStartCoords;
+    var mouseTargetPosition;
+    var currentTargetCoordsOnMap;
+
+    //  При первоночальном запуске страницы кнопку закрывает svg
+    if (evt.target.parentNode.tagName === 'svg') {
+
+      //  Переключить фокус на main pin button
+      target = evt.target.parentNode.parentNode;
+    } else {
+
+      // После последующих вызовов, переключить фокус, если необходимо. target - img, его родитель button
+      target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
+    };
+
+    //  Координаты кнопки в нулевой момент
+    targetCoords = {
+      x: target.getBoundingClientRect().left,
+      y: target.getBoundingClientRect().top
+    };
+
+    //  Координаты мышки в нулевой момент
+    mouseStartCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    //  Положение мыши относительно кнопки в нулевой момент,
+    //  величина постоянная до отжатия кнопки мышки
+    mouseTargetPosition = {
+      x: mouseStartCoords.x - targetCoords.x,
+      y: mouseStartCoords.y - targetCoords.y
+    };
+
+    //  Вывод положения мыши в форму не дожидаясь перемещения, так как перемещения может и не произайти!
+    currentTargetCoordsOnMap = {
+      x: target.offsetLeft,
+      y: mapNode.offsetHeight - (target.offsetTop + MAP_PIN_MAIN_TOP_DELTA)
+    };
+
+    window.form.changeNoticeFormAddressInput(currentTargetCoordsOnMap);
 
     evt.preventDefault();
     document.addEventListener('mousemove', onPinMainMouseMove);
