@@ -8,11 +8,17 @@
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
 
-  //  Учитывая псевдоэлемент
-  var MAP_PIN_MAIN_HEIGTH = 80;
+  //  Ограничитель кол-ва кнопок
+  var MAP_PIN_MAX_LIMIT = 10;
 
-  var MAP_PIN_MAIN_BORDER_X_MIN = 300;
-  var MAP_PIN_MAIN_BORDER_X_MAX = 900;
+  //  deltaY = 22(псевдоэлемент - указатель) + 62 / 2 (фактическая высота кнопки без псевдоэлемента) - 2 (translateY (-2px)) - 3
+  //  картинка смещена относительно обертки, style.top приминяется к обертке ==> необходимо учитывать translateY
+  //  размер обертки кнопки = 65, размер кнопки без указателя = 62 ===> необходимо учитывать компенсацию = 3
+  //  фактическая высота кнопки делится на два, так как еще смещена кнопка (translate (-50%, -50%)) ==> по X дельту можно не учитывать, но по Y необходимо!
+  var MAP_PIN_MAIN_TOP_DELTA = 62 / 2 + 22 - 2 - 3;
+
+  var MAP_PIN_MAIN_BORDER_X_MIN = 0;
+  var MAP_PIN_MAIN_BORDER_X_MAX = 1200;
   var MAP_PIN_MAIN_BORDER_Y_MIN = 100;
   var MAP_PIN_MAIN_BORDER_Y_MAX = 500;
 
@@ -21,9 +27,18 @@
   var mapFiltersContainerNode = mapNode.querySelector('.map__filters-container');
   var mapPinsNode = mapNode.querySelector('.map__pins');
   var mapPinMain = mapPinsNode.querySelector('.map__pin--main');
-  var mapGeneratedPins;
-  var mapGeneratedCards;
-  var mapCardsNode;
+  var mapLoadedPins;
+  var mapLoadedCards;
+
+  var diactivatePinBase = function (node) {
+    var offerIndex;
+
+    //  Поиск индекса активной кнопки относительно массива всех сгенерированных кнопок
+    //  Для определения соответствующей этой кнопке предложения
+    node.classList.remove('map__pin--active');
+    offerIndex = [].indexOf.call(mapLoadedPins, node);
+    hideNode(mapLoadedCards[offerIndex]);
+  };
 
   //  Переключатели видимости узла
   var hideNode = function (node) {
@@ -34,44 +49,7 @@
     node.style.display = '';
   };
 
-  //  Функция создает фрагмент с DOM элементами шаблона (template) '.map__pin', согласно массиву объектов mapPins
-  //  mapPins (object) - массив объектов
-  //  return fragment (object) - вернуть собранный фрагмент
-  var createMapPinsNode = function (arrayMapPins) {
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < arrayMapPins.length; i++) {
-      fragment.appendChild(window.pin.buildMapPinNode(arrayMapPins[i], mapNode.clientHeight));
-    }
-
-    return fragment;
-  };
-
-  //  Функция создает элемент DIV с DOM элементами шаблона (template) 'article.map__card', согласно массиву объектов mapPins
-  //  mapPins (object) - массив объектов
-  //  return divNode (object) - вернуть собранный элемент DIV
-  var createMapCards = function (arrayMapPins) {
-    var divNode = document.createElement('div');
-
-    divNode.className = 'map__cards';
-    for (var i = 0; i < arrayMapPins.length; i++) {
-      divNode.appendChild(window.card.buildMapCard(arrayMapPins[i]));
-    }
-
-    return divNode;
-  };
-
-  var diactivatePinBase = function (node) {
-    var offerIndex;
-
-    //  Поиск индекса активной кнопки относительно массива всех сгенерированных кнопок
-    //  Для определения соответствующей этой кнопке предложения
-    node.classList.remove('map__pin--active');
-    offerIndex = [].indexOf.call(mapGeneratedPins, node);
-    hideNode(mapGeneratedCards[offerIndex]);
-  };
-
-  //  Ф-ции НАЖАТИЯ
+  //  НАЖАТИЯ
 
   var onMapEscPress = function (evt) {
     var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
@@ -92,17 +70,15 @@
     }
   };
 
-  //  Ф-ции КЛИКИ
+  //  КЛИКИ
 
   var onMapPinMainMouseUp = function () {
     mapNode.classList.remove('map--faded');
-    mapGeneratedPins.forEach(showNode);
+    mapLoadedPins.forEach(showNode);
     window.form.enableNoticeForm();
   };
 
   var onMapPinMainMouseDown = function (evt) {
-    evt.preventDefault();
-
     // Переключить фокус, если необходимо. target - img, его родитель button
     var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
 
@@ -126,8 +102,6 @@
     };
 
     var onPinMainMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
       //  Текущие координаты мышки
       var mouseMoveCoords = {
         x: moveEvt.clientX,
@@ -143,8 +117,8 @@
       //  Пересчитываем координаты относительно новой оси (левый нижний угол карты)
       //  Реверсируем ось Y
       var newTargetCoordsOnMap = {
-        y: mapNode.clientHeight - MAP_PIN_MAIN_HEIGTH - newTargetCoords.y - pageYOffset,
-        x: newTargetCoords.x - mapNode.clientLeft - pageXOffset
+        x: target.offsetLeft + newTargetCoords.x - targetCoords.x,
+        y: mapNode.offsetHeight - (target.offsetTop + MAP_PIN_MAIN_TOP_DELTA + (newTargetCoords.y - targetCoords.y))
       };
 
       if (newTargetCoordsOnMap.x >= MAP_PIN_MAIN_BORDER_X_MIN && newTargetCoordsOnMap.x <= MAP_PIN_MAIN_BORDER_X_MAX && newTargetCoordsOnMap.y >= MAP_PIN_MAIN_BORDER_Y_MIN && newTargetCoordsOnMap.y <= MAP_PIN_MAIN_BORDER_Y_MAX) {
@@ -159,15 +133,16 @@
           y: target.getBoundingClientRect().top
         };
       }
+      moveEvt.preventDefault();
     };
 
     var onPinMainMouseUp = function (upEvt) {
       upEvt.preventDefault();
-
       document.removeEventListener('mousemove', onPinMainMouseMove);
       document.removeEventListener('mouseup', onPinMainMouseUp);
     };
 
+    evt.preventDefault();
     document.addEventListener('mousemove', onPinMainMouseMove);
     document.addEventListener('mouseup', onPinMainMouseUp);
   };
@@ -185,7 +160,7 @@
 
       target.classList.add('map__pin--active');
 
-      window.showCard(target, mapGeneratedPins);
+      window.showCard(target, mapLoadedPins);
 
       document.addEventListener('keydown', onMapEscPress);
     }
@@ -198,34 +173,62 @@
 
     if (target.classList.contains('popup__close')) {
       hideNode(target.parentNode);
-      pinIndex = [].indexOf.call(mapGeneratedCards, target.parentNode);
-      mapGeneratedPins[pinIndex].classList.remove('map__pin--active');
+      pinIndex = [].indexOf.call(mapLoadedCards, target.parentNode);
+      mapLoadedPins[pinIndex].classList.remove('map__pin--active');
 
       document.removeEventListener('keydown', onMapEscPress);
     }
   };
 
-  //  Генерация и сборка узлов
-  mapPinsNode.appendChild(createMapPinsNode(window.data.mapPin));
+  //  Коллбек-фция при успешной загрузке
+  var onMapPinLoad = function (arrayMapPins) {
+    var fragment = document.createDocumentFragment();
+    var mapCardsNode = document.createElement('div');
+    var count = MAP_PIN_MAX_LIMIT;
 
-  //  Выбрать только сгенерированные кнопки (исключить главную кнопку из выборки)
-  mapGeneratedPins = mapPinsNode.querySelectorAll('.map__pin:not(.map__pin--main)');
-  mapGeneratedPins.forEach(hideNode);
+    if (count > arrayMapPins.length) {
+      count = arrayMapPins.length;
+    }
+    //  Формируем из скачанных данных DOM-ы Кнопок на карте
+    for (var i = 0; i < count; i++) {
+      fragment.appendChild(window.pin.buildMapPinNode(arrayMapPins[i], mapNode.clientHeight));
+    }
+    mapPinsNode.appendChild(fragment);
 
-  //  Генерация предложений
-  mapCardsNode = createMapCards(window.data.mapPin);
-  mapNode.insertBefore(mapCardsNode, mapFiltersContainerNode);
-  mapGeneratedCards = mapNode.querySelectorAll('.map__card');
-  mapGeneratedCards.forEach(hideNode);
+    //  Выбираем все Кнопки, кроме главной
+    mapLoadedPins = mapPinsNode.querySelectorAll('.map__pin:not(.map__pin--main)');
+    mapLoadedPins.forEach(hideNode);
 
-  //  ИНИЦИАЛИЗАЦИЯ Событий
+    //  Формируем из скачанных данных DOM-ы Предложений
+    mapCardsNode.className = 'map__cards';
+    for (i = 0; i < count; i++) {
+      mapCardsNode.appendChild(window.card.buildMapCard(arrayMapPins[i]));
+    }
+    mapNode.insertBefore(mapCardsNode, mapFiltersContainerNode);
+
+    //  Выбираем все предложения
+    mapLoadedCards = mapCardsNode.childNodes;
+    mapLoadedCards.forEach(hideNode);
+
+    //  События должны срабатывать только после полного скачивания и формирования DOM-ов
+    mapPinsNode.addEventListener('click', onMapPinsNodeClick);
+    mapPinsNode.addEventListener('keydown', onMapPinsNodeEnterPress);
+
+    mapCardsNode.addEventListener('click', onMapCardsNodeClick);
+    mapCardsNode.addEventListener('keydown', onMapCardsNodeEnterPress);
+  };
+
+  //  Коллбек-фция при неудачной загрузке
+  var onMapPinError = function (errorType) {
+    window.data.onDefaultError(errorType, 'default', function (node, message) {
+      node.style.bottom = 0;
+      node.textContent = 'Во время загрузки данных возникли проблемы. ' + message;
+    });
+  };
+
+  //  Инициализация и сборка узлов
+  window.backend.load(onMapPinLoad, onMapPinError);
 
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
   mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp);
-
-  mapPinsNode.addEventListener('click', onMapPinsNodeClick);
-  mapPinsNode.addEventListener('keydown', onMapPinsNodeEnterPress);
-
-  mapCardsNode.addEventListener('click', onMapCardsNodeClick);
-  mapCardsNode.addEventListener('keydown', onMapCardsNodeEnterPress);
 })();

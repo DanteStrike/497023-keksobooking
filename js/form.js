@@ -35,6 +35,31 @@
 
   var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
 
+  var onNoticeFormPriceInputInvalid = function (evt) {
+    var target = evt.target;
+
+    if (target.validity.rangeUnderflow) {
+      target.setCustomValidity('Минимальная цена = ' + target.min);
+    } else {
+      target.setCustomValidity('');
+    }
+  };
+
+  var onNoticeFormTitleInputInvalid = function (evt) {
+    //  браузер Edge не поддерживает атрибут minlength
+    var target = evt.target;
+
+    if (target.value.length < TITLE_INPUT_MIN_LENGTH) {
+      target.setCustomValidity('Имя должно состоять минимум из ' + TITLE_INPUT_MIN_LENGTH + ' символов');
+    } else if (noticeFormTitleInput.validity.tooLong) {
+      noticeFormTitleInput.setCustomValidity('Имя не должно превышать ' + TITLE_INPUT_MAX_LENGTH + ' символов');
+    } else if (noticeFormTitleInput.validity.valueMissing) {
+      noticeFormTitleInput.setCustomValidity('Обязательное поле');
+    } else {
+      noticeFormTitleInput.setCustomValidity('');
+    }
+  };
+
   var disableNoticeForm = function () {
     for (var i = 0; i < noticeFormFieldsets.length; i++) {
       noticeFormFieldsets[i].disabled = true;
@@ -73,33 +98,27 @@
   };
 
   var changeNoticeFormAddressInput = function (coords) {
-    noticeFormAddressInput.value = 'x: {' + coords.x + '}, y: {' + coords.y + '}';
+    noticeFormAddressInput.value = 'x: {' + Math.round(coords.x) + '}, y: {' + Math.round(coords.y) + '}';
   };
 
-  var onNoticeFormPriceInputInvalid = function (evt) {
-    var target = evt.target;
-
-    if (target.validity.rangeUnderflow) {
-      target.setCustomValidity('Минимальная цена = ' + target.min);
-    } else {
-      target.setCustomValidity('');
-    }
+  //  Коллбек-фция при успешной отправке
+  var onNoticeFormLoad = function () {
+    noticeForm.reset();
   };
 
-  var onNoticeFormTitleInputInvalid = function (evt) {
-    //  браузер Edge не поддерживает атрибут minlength
-    var target = evt.target;
-
-    if (target.value.length < TITLE_INPUT_MIN_LENGTH) {
-      target.setCustomValidity('Имя должно состоять минимум из ' + TITLE_INPUT_MIN_LENGTH + ' символов');
-    } else if (noticeFormTitleInput.validity.tooLong) {
-      noticeFormTitleInput.setCustomValidity('Имя не должно превышать ' + TITLE_INPUT_MAX_LENGTH + ' символов');
-    } else if (noticeFormTitleInput.validity.valueMissing) {
-      noticeFormTitleInput.setCustomValidity('Обязательное поле');
-    } else {
-      noticeFormTitleInput.setCustomValidity('');
-    }
+  //  Коллбек-фция при неудачной отправке
+  var onNoticeFormError = function (errorType) {
+    window.data.onDefaultError(errorType, 'default', function (node, message) {
+      node.style.top = 0;
+      node.style.backgroundColor = 'orange';
+      node.textContent = 'Во время работы с формой возникли проблемы. ' + message;
+    });
   };
+
+  noticeForm.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(noticeForm), onNoticeFormLoad, onNoticeFormError);
+    evt.preventDefault();
+  });
 
   disableNoticeForm();
   initInputsSelectsAttributes();
