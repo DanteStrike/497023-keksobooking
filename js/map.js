@@ -64,7 +64,7 @@
   var renderMapPins = function (array) {
     var removeNode = function (node) {
       node.remove();
-    }
+    };
 
     var mapCardsNode = document.querySelector('.map__cards');
     var fragment = document.createDocumentFragment();
@@ -115,6 +115,8 @@
     var filterPrice = function (element) {
       if (element.offer.price >= FILTER_PRICE_VALUES[mapFilterPrice.value].min && element.offer.price <= FILTER_PRICE_VALUES[mapFilterPrice.value].max) {
         return true;
+      } else {
+        return false;
       }
     };
     var filterRooms = function (element) {
@@ -138,8 +140,8 @@
       var findEntry = function (feature) {
         if (element.offer.features.indexOf(feature) === -1) {
           entry = false;
-        };
-      }
+        }
+      };
       features.forEach(findEntry);
       return entry;
     };
@@ -161,7 +163,7 @@
   var onMapEscPress = function (evt) {
     var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
     if (evt.keyCode === window.utility.escKeyCode && window.pin.disablePin()) {
-      window.card.hideCard(mapPinActive, mapPins)
+      window.card.hideCard(mapPinActive, mapPins);
     }
   };
 
@@ -198,8 +200,8 @@
 
     //  Вывод положения мыши в форму не дожидаясь перемещения, так как перемещения может и не произайти!
     var currentTargetCoordsOnMap = {
-      y: mapNode.clientHeight - MAP_PIN_MAIN_HEIGTH - targetCoords.y - pageYOffset - 0.5,
-      x: targetCoords.x - MAP_PIN_MAIN_WIDTH / 2 - mapNode.clientLeft - pageXOffset
+      x: target.offsetLeft,
+      y: mapNode.offsetHeight - (target.offsetTop + MAP_PIN_MAIN_TOP_DELTA)
     };
 
     window.form.changeNoticeFormAddressInput(currentTargetCoordsOnMap);

@@ -20,7 +20,7 @@
     mapPinNode.style.display = 'none';
 
     return mapPinNode;
-  }
+  };
 
   var disablePin = function () {
     var mapPinActive = document.querySelector('.map__pin--active');
@@ -32,18 +32,9 @@
     }
   };
 
-  var hidePin = function (pin) {
-    pin.style.display = 'none';
-  };
-
-  var showPin = function (pin) {
-    pin.style.display = '';
-  };
-
   var onMapPinClick = function (evt) {
     // Переключить фокус, если необходимо. target - img, его родитель button
     var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
-    var offerIndex;
     var mapPinActive = document.querySelector('.map__pin--active');
     var mapLoadedPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
@@ -65,7 +56,7 @@
   var initializeMapPinEvent = function (mapPinNode) {
     mapPinNode.addEventListener('click', onMapPinClick);
     mapPinNode.addEventListener('keydown', onMapPinEnterPress);
-  }
+  };
 
   window.pin = {
     disablePin: disablePin,

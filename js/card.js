@@ -52,7 +52,6 @@
 
   var onMapCardClick = function (evt) {
     var target = evt.target;
-    var pinIndex;
 
     if (target.classList.contains('popup__close')) {
       target.parentNode.style.display = 'none';
@@ -71,7 +70,7 @@
   var initializeMapCardEvent = function (mapCardNode) {
     mapCardNode.addEventListener('click', onMapCardClick);
     mapCardNode.addEventListener('keydown', onMapCardEnterPress);
-  }
+  };
 
   window.card = {
     buildMapCard: buildMapCard,
