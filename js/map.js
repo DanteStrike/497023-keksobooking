@@ -17,6 +17,25 @@
   var MAP_PIN_MAIN_BORDER_Y_MIN = 100;
   var MAP_PIN_MAIN_BORDER_Y_MAX = 500;
 
+  var FILTER_PRICE_VALUES = {
+    'any': {
+      min: 0,
+      max: Infinity
+    },
+    'middle': {
+      min: 10001,
+      max: 49999
+    },
+    'low': {
+      min: 0,
+      max: 10000
+    },
+    'high': {
+      min: 50000,
+      max: Infinity
+    }
+  };
+
   var mapNode = document.querySelector('.map');
 
   var mapFiltersContainerNode = mapNode.querySelector('.map__filters-container');
@@ -25,7 +44,7 @@
   var mapFilterPrice = mapFiltersForm.querySelector('#housing-price');
   var mapFilterRooms = mapFiltersForm.querySelector('#housing-rooms');
   var mapFilterGuests = mapFiltersForm.querySelector('#housing-guests');
-  var mapFilterFeatures = mapFiltersForm.querySelector('#housing-features');
+  var mapFilterFeatures = mapFiltersForm.querySelectorAll('#housing-features input');
 
   var mapPinsNode = mapNode.querySelector('.map__pins');
   var mapPinMain = mapPinsNode.querySelector('.map__pin--main');
@@ -36,6 +55,105 @@
   //  Сохраняем данные
   var mapPinsCards;
 
+  var showNode = function (node) {
+    node.style.display = '';
+  };
+
+  var renderMapPins = function (array) {
+    var removeNode = function (node) {
+      node.remove();
+    }
+
+    var mapCardsNode = document.querySelector('.map__cards');
+    var fragment = document.createDocumentFragment();
+    var count = MAP_PIN_MAX_LIMIT;
+
+    //  Убрать старое
+    if (mapPins) {
+      mapPins.forEach(removeNode);
+    }
+
+    if (mapCardsNode) {
+      removeNode(mapCardsNode);
+    }
+
+    //  Сформировать новое
+    if (count > array.length) {
+      count = array.length;
+    }
+    //  Формируем DOM-ы Кнопок на карте
+    for (var i = 0; i < count; i++) {
+      fragment.appendChild(window.pin.buildMapPinNode(array[i], mapNode.clientHeight));
+    }
+    mapPinsNode.appendChild(fragment);
+
+    //  Выбираем все Кнопки, кроме главной
+    mapPins = mapPinsNode.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+    //  Формируем DOM-ы Предложений
+    mapCardsNode = document.createElement('div');
+    mapCardsNode.className = 'map__cards';
+    for (i = 0; i < count; i++) {
+      mapCardsNode.appendChild(window.card.buildMapCard(array[i]));
+    }
+    mapNode.insertBefore(mapCardsNode, mapFiltersContainerNode);
+
+    //  Выбираем все предложения
+    mapCards = mapCardsNode.querySelectorAll('.map__card');
+
+    //  События должны срабатывать только после полного формирования DOM-ов
+    mapPins.forEach(window.pin.initializeMapPinEvent);
+    mapCards.forEach(window.card.initializeMapCardEvent);
+  };
+
+  var updatePinsCards = function () {
+    var filterType = function (element) {
+      return mapFilterType.value !== 'any' ? element.offer.type === mapFilterType.value : true;
+    };
+    var filterPrice = function (element) {
+      if (element.offer.price >= FILTER_PRICE_VALUES[mapFilterPrice.value].min && element.offer.price <= FILTER_PRICE_VALUES[mapFilterPrice.value].max) {
+        return true;
+      }
+    };
+    var filterRooms = function (element) {
+      return mapFilterRooms.value !== 'any' ? element.offer.rooms === +mapFilterRooms.value : true;
+    };
+    var filterGuests = function (element) {
+      return mapFilterGuests.value !== 'any' ? element.offer.guests === +mapFilterGuests.value : true;
+    };
+
+    var features = [];
+    var filteredMapPinsCards = mapPinsCards.slice(0);
+
+    var collectFilterFeatures = function (element) {
+      if (element.checked) {
+        features.push(element.value);
+      }
+    };
+
+    var filterFeatures = function (element) {
+      var entry = true;
+      var findEntry = function (feature) {
+        if (element.offer.features.indexOf(feature) === -1) {
+          entry = false;
+        };
+      }
+      features.forEach(findEntry);
+      return entry;
+    };
+
+    mapFilterFeatures.forEach(collectFilterFeatures);
+
+    filteredMapPinsCards = filteredMapPinsCards.filter(filterType);
+    filteredMapPinsCards = filteredMapPinsCards.filter(filterPrice);
+    filteredMapPinsCards = filteredMapPinsCards.filter(filterRooms);
+    filteredMapPinsCards = filteredMapPinsCards.filter(filterGuests);
+    filteredMapPinsCards = filteredMapPinsCards.filter(filterFeatures);
+
+    renderMapPins(filteredMapPinsCards);
+    mapPins.forEach(showNode);
+  };
+
   //  НАЖАТИЯ
 
   var onMapEscPress = function (evt) {
@@ -43,10 +161,6 @@
     if (evt.keyCode === window.utility.escKeyCode && window.pin.disablePin()) {
       window.card.hideCard(mapPinActive, mapPins)
     }
-  };
-
-  var showNode = function (node) {
-    node.style.display = '';
   };
 
   //  КЛИКИ
@@ -148,65 +262,12 @@
     });
   };
 
-  var renderMapPins = function (array) {
-    var removeNode = function (node) {
-      node.remove();
-    }
-
-    var mapCardsNode = document.querySelector('map__cards');
-    var fragment = document.createDocumentFragment();
-    var count = MAP_PIN_MAX_LIMIT;
-
-    //  Убрать старое
-    if (mapPins) {
-      mapPins.forEach(removeNode);
-    }
-
-    if (mapCardsNode) {
-      removeNode(mapCardsNode);
-    }
-
-    //  Сформировать новое
-    if (count > array.length) {
-      count = array.length;
-    }
-    //  Формируем DOM-ы Кнопок на карте
-    for (var i = 0; i < count; i++) {
-      fragment.appendChild(window.pin.buildMapPinNode(array[i], mapNode.clientHeight));
-    }
-    mapPinsNode.appendChild(fragment);
-
-    //  Выбираем все Кнопки, кроме главной
-    mapPins = mapPinsNode.querySelectorAll('.map__pin:not(.map__pin--main)');
-
-    //  Формируем DOM-ы Предложений
-    mapCardsNode = document.createElement('div');
-    mapCardsNode.className = 'map__cards';
-    for (i = 0; i < count; i++) {
-      mapCardsNode.appendChild(window.card.buildMapCard(array[i]));
-    }
-    mapNode.insertBefore(mapCardsNode, mapFiltersContainerNode);
-
-    //  Выбираем все предложения
-    mapCards = mapCardsNode.querySelectorAll('.map__card');
-
-    //  События должны срабатывать только после полного формирования DOM-ов
-    mapPins.forEach(window.pin.initializeMapPinEvent);
-    mapCards.forEach(window.card.initializeMapCardEvent);
+  var onMapFiltersFormChange = function () {
+    window.utility.debounce(updatePinsCards);
   };
 
   //  Инициализация и сборка узлов
   window.backend.load(onMapPinLoad, onMapPinError);
-
-  var onMapFiltersFormChange = function () {
-    var filterType = function (element) {
-      return mapFilterType.value !== 'any' ? element.offer.type === mapFilterType.value : true;
-    }
-
-    renderMapPins(mapPinsCards.filter(filterType));
-    mapPins.forEach(showNode);
-
-  };
 
   mapFiltersForm.addEventListener('change', onMapFiltersFormChange);
 
