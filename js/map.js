@@ -232,7 +232,7 @@
 
       // После последующих вызовов, переключить фокус, если необходимо. target - img, его родитель button
       target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
-    };
+    }
 
     //  Координаты кнопки в нулевой момент
     targetCoords = {
