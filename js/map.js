@@ -186,7 +186,7 @@
 
   var onMapPinMainMouseUp = function () {
     mapNode.classList.remove('map--faded');
-    updatePinsCards();
+    window.utility.debounce(updatePinsCards);
     window.form.enableNoticeForm();
   };
 
