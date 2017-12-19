@@ -146,6 +146,20 @@
       return entry;
     };
 
+    //  Вывод ближайших к главной кнопке, если в массиве больше эл-ов, чем мы можем отобразить.
+    var mapPinMainCoordsOnMap = {
+      x: mapPinMain.offsetLeft,
+      y: mapNode.offsetHeight - (mapPinMain.offsetTop + MAP_PIN_MAIN_TOP_DELTA)
+    };
+
+    var getDistance = function (element) {
+      return Math.round(Math.sqrt(Math.pow(element.location.x - mapPinMainCoordsOnMap.x, 2) + Math.pow(element.location.y - mapPinMainCoordsOnMap.y, 2), 2));
+    };
+
+    var sortByDistance = function (left, right) {
+      return getDistance(left) - getDistance(right);
+    };
+
     mapFilterFeatures.forEach(collectFilterFeatures);
 
     filteredMapPinsCards = filteredMapPinsCards.filter(filterType);
@@ -153,6 +167,7 @@
     filteredMapPinsCards = filteredMapPinsCards.filter(filterRooms);
     filteredMapPinsCards = filteredMapPinsCards.filter(filterGuests);
     filteredMapPinsCards = filteredMapPinsCards.filter(filterFeatures);
+    filteredMapPinsCards.sort(sortByDistance);
 
     renderMapPins(filteredMapPinsCards);
     mapPins.forEach(showNode);
@@ -171,7 +186,7 @@
 
   var onMapPinMainMouseUp = function () {
     mapNode.classList.remove('map--faded');
-    mapPins.forEach(showNode);
+    updatePinsCards();
     window.form.enableNoticeForm();
   };
 
