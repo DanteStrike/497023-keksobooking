@@ -22,23 +22,19 @@
     return mapPinNode;
   };
 
-  var disablePin = function () {
+  var disableActivePin = function () {
     var mapPinActive = document.querySelector('.map__pin--active');
     if (mapPinActive) {
       mapPinActive.classList.remove('map__pin--active');
-      return true;
-    } else {
-      return false;
     }
   };
 
   var onMapPinClick = function (evt) {
     // Переключить фокус, если необходимо. target - img, его родитель button
     var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
-    var mapPinActive = document.querySelector('.map__pin--active');
     var mapLoadedPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
-    if (disablePin()) {
+    if (disableActivePin()) {
       window.card.hideCard(mapPinActive, mapLoadedPins);
     }
 
