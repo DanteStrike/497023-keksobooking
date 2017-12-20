@@ -1,9 +1,8 @@
 'use strict';
 
 (function () {
-  window.showCard = function (target, targets) {
-    var mapCards = document.querySelectorAll('.map__card');
-    var offerIndex = [].indexOf.call(targets, target);
-    mapCards[offerIndex].style.display = '';
+  window.showCard = function (pinId) {
+    var card = document.querySelector('[data-pin=\"' + pinId + '\"]');
+    card.style.display = '';
   };
 })();

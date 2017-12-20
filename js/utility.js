@@ -62,7 +62,7 @@
     onDefaultError: onDefaultError,
     debounce: debounce,
     enterKeyCode: ENTER_KEYCODE,
-    escKeycode: ESC_KEYCODE,
+    escKeyCode: ESC_KEYCODE,
     notFound: NOT_FOUND
   };
 })();

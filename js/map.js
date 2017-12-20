@@ -69,6 +69,8 @@
     var mapCardsNode = document.querySelector('.map__cards');
     var fragment = document.createDocumentFragment();
     var count = MAP_PIN_MAX_LIMIT;
+    var pin;
+    var card;
 
     //  Убрать старое
     if (mapPins) {
@@ -85,7 +87,9 @@
     }
     //  Формируем DOM-ы Кнопок на карте
     for (var i = 0; i < count; i++) {
-      fragment.appendChild(window.pin.buildMapPinNode(array[i], mapNode.clientHeight));
+      pin = window.pin.buildMapPinNode(array[i], mapNode.clientHeight)
+      pin.id = '$PINid$' + i;
+      fragment.appendChild(pin);
     }
     mapPinsNode.appendChild(fragment);
 
@@ -96,7 +100,9 @@
     mapCardsNode = document.createElement('div');
     mapCardsNode.className = 'map__cards';
     for (i = 0; i < count; i++) {
-      mapCardsNode.appendChild(window.card.buildMapCard(array[i]));
+      card = window.card.buildMapCard(array[i]);
+      card.setAttribute('data-pin', '$PINid$' + i);
+      mapCardsNode.appendChild(card);
     }
     mapNode.insertBefore(mapCardsNode, mapFiltersContainerNode);
 
@@ -176,9 +182,8 @@
   //  НАЖАТИЯ
 
   var onMapEscPress = function (evt) {
-    var mapPinActive = mapPinsNode.querySelector('.map__pin--active');
-    if (evt.keyCode === window.utility.escKeyCode && window.pin.disablePin()) {
-      window.card.hideCard(mapPinActive, mapPins);
+    if (evt.keyCode === window.utility.escKeyCode) {
+      window.pin.disableActivePinOffer();
     }
   };
 
@@ -301,6 +306,9 @@
 
   //  Инициализация и сборка узлов
   window.backend.load(onMapPinLoad, onMapPinError);
+
+  mapPinsCards = window.data.mapPinCards;
+  renderMapPins(mapPinsCards);
 
   mapFiltersForm.addEventListener('change', onMapFiltersFormChange);
 

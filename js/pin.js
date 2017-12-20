@@ -22,24 +22,21 @@
     return mapPinNode;
   };
 
-  var disableActivePin = function () {
+  var disableActivePinOffer = function () {
     var mapPinActive = document.querySelector('.map__pin--active');
     if (mapPinActive) {
       mapPinActive.classList.remove('map__pin--active');
+      window.card.hideCard(mapPinActive.id);
     }
   };
 
   var onMapPinClick = function (evt) {
     // Переключить фокус, если необходимо. target - img, его родитель button
     var target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
-    var mapLoadedPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
-    if (disableActivePin()) {
-      window.card.hideCard(mapPinActive, mapLoadedPins);
-    }
-
+    disableActivePinOffer();
     target.classList.add('map__pin--active');
-    window.showCard(target, mapLoadedPins);
+    window.showCard(target.id);
     document.addEventListener('keydown', window.map.onMapEscPress);
   };
 
@@ -55,9 +52,9 @@
   };
 
   window.pin = {
-    disablePin: disablePin,
+    disableActivePinOffer: disableActivePinOffer,
     buildMapPinNode: buildMapPinNode,
-    initializeMapPinEvent: initializeMapPinEvent,
+    initializeMapPinEvent: initializeMapPinEvent
   };
 })();
 

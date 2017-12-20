@@ -46,18 +46,16 @@
 
   //  Поиск индекса активной кнопки относительно массива всех сгенерированных кнопок
   //  Для определения соответствующей этой кнопке предложения
-  var hideCard = function (pinNode, pinNodes) {
-    var mapCards = document.querySelectorAll('.map__card');
-    var offerIndex = [].indexOf.call(pinNodes, pinNode);
-    mapCards[offerIndex].style.display = 'none';
+  var hideCard = function (pinId) {
+    var card = document.querySelector('[data-pin=\"' + pinId + '\"]');
+    card.style.display = 'none';
   };
 
   var onMapCardClick = function (evt) {
     var target = evt.target;
 
     if (target.classList.contains('popup__close')) {
-      target.parentNode.style.display = 'none';
-      window.pin.disablePin();
+      window.pin.disableActivePinOffer();
 
       document.removeEventListener('keydown', window.map.onMapEscPress);
     }

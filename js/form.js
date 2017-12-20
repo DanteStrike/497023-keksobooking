@@ -104,6 +104,7 @@
     }
 
     elementDomOptions.forEach(disableIncorrectOptions);
+    //  Перекинуть на доступную опцию
     element.value = values[0];
   };
 
