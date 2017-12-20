@@ -57,7 +57,6 @@
   };
 
   window.utility = {
-    offerAvailableFeatures: OFFER_AVAILABLE_FEATURES,
     onDefaultError: onDefaultError,
     debounce: debounce,
     enterKeyCode: ENTER_KEYCODE,

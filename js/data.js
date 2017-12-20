@@ -88,7 +88,7 @@
   //  avatarNumber (int) - номер картинки аватарки
   //  offerTitle (string) - заголовок предложения
   //  return pin (obj)
-  var createmapPinCard = function (avatarNumber, offerTitle) {
+  var createMapPinCard = function (avatarNumber, offerTitle) {
     var objAuthor = {
       avatar: 'img/avatars/user0' + avatarNumber.toString() + '.png'
     };
