@@ -7,8 +7,8 @@
   //  node (object) - узел содержащий ВСЕ возможные удобства
   //  features (object) - массив текущих удобств
   var buildMapCardFeatures = function (node, features) {
-    for (var i = 0; i < window.utility.offerAvailableFeatures.length; i++) {
-      if (features.indexOf(window.utility.offerAvailableFeatures[i]) === window.utility.notFound) {
+    for (var i = 0; i < OFFER_AVAILABLE_FEATURES_NODES.length; i++) {
+      if (features.indexOf(OFFER_AVAILABLE_FEATURES_NODES[i]) === window.utility.notFound) {
         node.removeChild(node.querySelector('.feature--' + OFFER_AVAILABLE_FEATURES_NODES[i]));
       }
     }
