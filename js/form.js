@@ -100,7 +100,11 @@
   var syncValueWithOptions = function (element, values) {
     var elementDomOptions = [].slice.call(element.children);
     var disableIncorrectOptions = function (option) {
-      values.indexOf(option.value) !== window.utility.notFound ? option.disabled = false : option.disabled = true;
+      if (values.indexOf(option.value) !== window.utility.notFound) {
+        option.disabled = false;
+      } else {
+        option.disabled = true;
+      }
     };
 
     elementDomOptions.forEach(disableIncorrectOptions);
