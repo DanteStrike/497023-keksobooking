@@ -74,7 +74,7 @@
 
     //  Убрать старое
     if (mapPins) {
-      mapPins.forEach(removeNode);
+      [].slice.call(mapPins).forEach(removeNode);
     }
 
     if (mapCardsNode) {
@@ -110,8 +110,8 @@
     mapCards = mapCardsNode.querySelectorAll('.map__card');
 
     //  События должны срабатывать только после полного формирования DOM-ов
-    mapPins.forEach(window.pin.initializeMapPinEvent);
-    mapCards.forEach(window.card.initializeMapCardEvent);
+    [].slice.call(mapPins).forEach(window.pin.initializeMapPinEvent);
+    [].slice.call(mapCards).forEach(window.card.initializeMapCardEvent);
   };
 
   var updatePinsCards = function () {
@@ -166,7 +166,7 @@
       return getDistance(left) - getDistance(right);
     };
 
-    mapFilterFeatures.forEach(collectFilterFeatures);
+    [].slice.call(mapFilterFeatures).forEach(collectFilterFeatures);
 
     filteredMapPinsCards = filteredMapPinsCards.filter(filterType);
     filteredMapPinsCards = filteredMapPinsCards.filter(filterPrice);
@@ -176,7 +176,7 @@
     filteredMapPinsCards.sort(sortByDistance);
 
     renderMapPins(filteredMapPinsCards);
-    mapPins.forEach(showNode);
+    [].slice.call(mapPins).forEach(showNode);
   };
 
   //  НАЖАТИЯ
