@@ -144,7 +144,7 @@
     var filterFeatures = function (element) {
       var entry = true;
       var findEntry = function (feature) {
-        if (element.offer.features.indexOf(feature) === window.utility.notFound) {
+        if (element.offer.features.indexOf(feature) === window.utility.NOT_FOUND) {
           entry = false;
         }
       };
@@ -182,7 +182,7 @@
   //  НАЖАТИЯ
 
   var onMapEscPress = function (evt) {
-    if (evt.keyCode === window.utility.escKeyCode) {
+    if (evt.keyCode === window.utility.ESC_KEYCODE) {
       window.pin.disableActivePinOffer();
     }
   };

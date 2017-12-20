@@ -8,7 +8,7 @@
   //  features (object) - массив текущих удобств
   var buildMapCardFeatures = function (node, features) {
     for (var i = 0; i < OFFER_AVAILABLE_FEATURES_NODES.length; i++) {
-      if (features.indexOf(OFFER_AVAILABLE_FEATURES_NODES[i]) === window.utility.notFound) {
+      if (features.indexOf(OFFER_AVAILABLE_FEATURES_NODES[i]) === window.utility.NOT_FOUND) {
         node.removeChild(node.querySelector('.feature--' + OFFER_AVAILABLE_FEATURES_NODES[i]));
       }
     }
@@ -88,7 +88,7 @@
   };
 
   var onMapCardEnterPress = function (evt) {
-    if (evt.keyCode === window.utility.enterKeyCode) {
+    if (evt.keyCode === window.utility.ENTER_KEYCODE) {
       onMapCardClick(evt);
     }
   };

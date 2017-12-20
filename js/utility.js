@@ -61,8 +61,8 @@
   window.utility = {
     onDefaultError: onDefaultError,
     debounce: debounce,
-    enterKeyCode: ENTER_KEYCODE,
-    escKeyCode: ESC_KEYCODE,
-    notFound: NOT_FOUND
+    ENTER_KEYCODE: ENTER_KEYCODE,
+    ESC_KEYCODE: ESC_KEYCODE,
+    NOT_FOUND: NOT_FOUND
   };
 })();

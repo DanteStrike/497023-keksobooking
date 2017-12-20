@@ -41,10 +41,10 @@
   //  Функция перемешивает случайным образом массив source
   //  count - кол-во элементов в возвращаемом массиве. Если не указан то count = source.length
   //  count = 'random' - то возвращаемый массив обрезается по случайной длине.
-  //  return randomArray (object)
+  //  return randomElements (object)
   var generateRandomArray = function (source, count, callback) {
     var randomSequenceIndexes = [];
-    var randomArray = [];
+    var randomElements = [];
     var element;
     var index;
     var random;
@@ -69,18 +69,18 @@
         element = source[i];
         index = i;
         random = randomSequenceIndexes[i];
-        randomArray[i] = callback(element, index, random);
+        randomElements[i] = callback(element, index, random);
       }
     } else {
       for (i = 0; i < source.length; i++) {
-        randomArray[randomSequenceIndexes[i]] = source[i];
+        randomElements[randomSequenceIndexes[i]] = source[i];
       }
     }
 
     //  Возможность обрезать массив.
-    randomArray.length = count;
+    randomElements.length = count;
 
-    return randomArray;
+    return randomElements;
   };
 
   //  Функция собирает объект mapPinCard

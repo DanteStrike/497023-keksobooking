@@ -84,7 +84,7 @@
   var syncValueWithOptions = function (element, values) {
     var elementDomOptions = [].slice.call(element.children);
     var disableIncorrectOptions = function (option) {
-      if (values.indexOf(option.value) !== window.utility.notFound) {
+      if (values.indexOf(option.value) !== window.utility.NOT_FOUND) {
         option.disabled = false;
       } else {
         option.disabled = true;
