@@ -85,9 +85,9 @@
   //  Функция собирает объект mapPinCard
   //  mapPinCard - сложный объект состоящий из 3-х других простых объектов (objAuthor, objOffer, objLocation)
   //  avatarNumber (int) - номер картинки аватарки
-  //  offerTitel (string) - заголовок предложения
+  //  offerTitle (string) - заголовок предложения
   //  return pin (obj)
-  var createmapPinCard = function (avatarNumber, offerTitel) {
+  var createmapPinCard = function (avatarNumber, offerTitle) {
     var objAuthor = {
       avatar: 'img/avatars/user0' + avatarNumber.toString() + '.png'
     };
@@ -96,7 +96,7 @@
       y: getRandomInt(MAP_PIN_Y_MIN, MAP_PIN_Y_MAX)
     };
     var objOffer = {
-      title: offerTitel,
+      title: offerTitle,
       address: objLocation.x + ', ' + objLocation.y,
       price: getRandomInt(OFFER_PRICE_MIN, OFFER_PRICE_MAX),
       type: OFFER_TYPES[getRandomInt(0, OFFER_TYPES.length)],
