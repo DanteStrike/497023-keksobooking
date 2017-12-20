@@ -87,7 +87,7 @@
     }
     //  Формируем DOM-ы Кнопок на карте
     for (var i = 0; i < count; i++) {
-      pin = window.pin.buildMapPinNode(array[i], mapNode.clientHeight)
+      pin = window.pin.buildMapPinNode(array[i], mapNode.clientHeight);
       pin.id = '$PINid$' + i;
       fragment.appendChild(pin);
     }
