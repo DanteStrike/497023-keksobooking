@@ -8,7 +8,7 @@
   //  features (object) - массив текущих удобств
   var buildMapCardFeatures = function (node, features) {
     for (var i = 0; i < window.utility.offerAvailableFeatures.length; i++) {
-      if (features.indexOf(window.utility.offerAvailableFeatures[i]) === -1) {
+      if (features.indexOf(window.utility.offerAvailableFeatures[i]) === window.utility.notFound) {
         node.removeChild(node.querySelector('.feature--' + OFFER_AVAILABLE_FEATURES_NODES[i]));
       }
     }

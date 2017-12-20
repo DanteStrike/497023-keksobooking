@@ -7,6 +7,8 @@
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
 
+  var NOT_FOUND = -1;
+
   //  Форма ошибок схожа для формы и для карты, но имеет отличия в стилизации
   //  Вынесена в отдельный модуль с гибкой настройкой callback-ом
   var onDefaultError = function (errorMessage, messageLifetime, callback) {
@@ -60,6 +62,7 @@
     onDefaultError: onDefaultError,
     debounce: debounce,
     enterKeyCode: ENTER_KEYCODE,
-    escKeycode: ESC_KEYCODE
+    escKeycode: ESC_KEYCODE,
+    notFound: NOT_FOUND
   };
 })();

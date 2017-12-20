@@ -138,7 +138,7 @@
     var filterFeatures = function (element) {
       var entry = true;
       var findEntry = function (feature) {
-        if (element.offer.features.indexOf(feature) === -1) {
+        if (element.offer.features.indexOf(feature) === window.utility.notFound) {
           entry = false;
         }
       };
