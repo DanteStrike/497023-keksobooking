@@ -73,22 +73,6 @@
     }
   };
 
-  var initInputsSelectsAttributes = function () {
-    // Изначально данных атт нет в разметке
-    noticeFormTitleInput.required = true;
-    noticeFormTitleInput.maxLength = TITLE_INPUT_MAX_LENGTH;
-
-    noticeFormAddressInput.required = true;
-    noticeFormAddressInput.readOnly = true;
-
-    noticeFormPriceInput.required = true;
-    noticeFormPriceInput.min = PRICE_INPUT_MIN_DEFAULT;
-    noticeFormPriceInput.max = PRICE_INPUT_MAX_VALUE;
-
-    //  Количество комнат связано с количеством гостей
-    noticeFormCapacitySelect.value = noticeFormRoomstSelect.value;
-  };
-
   var syncValues = function (element, value) {
     element.value = value;
   };
@@ -110,6 +94,22 @@
     elementDomOptions.forEach(disableIncorrectOptions);
     //  Перекинуть на доступную опцию
     element.value = values[0];
+  };
+
+  var initInputsSelectsAttributes = function () {
+    // Изначально данных атт нет в разметке
+    noticeFormTitleInput.required = true;
+    noticeFormTitleInput.maxLength = TITLE_INPUT_MAX_LENGTH;
+
+    noticeFormAddressInput.required = true;
+    noticeFormAddressInput.readOnly = true;
+
+    noticeFormPriceInput.required = true;
+    noticeFormPriceInput.min = PRICE_INPUT_MIN_DEFAULT;
+    noticeFormPriceInput.max = PRICE_INPUT_MAX_VALUE;
+
+    //  Начальная синхронизация кол-ва гостей
+    syncValueWithOptions(noticeFormCapacitySelect, CAPACITY[0]);
   };
 
   var changeNoticeFormAddressInput = function (coords) {
