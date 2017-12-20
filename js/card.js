@@ -30,7 +30,7 @@
       fragment.appendChild(ulChildNode);
     });
 
-    //  Выставляем настройки списка фото <ul>, что бы был скролинг по горизонтали и не занимал много высоты
+    //  Выставляем настройки списка фото <ul>, чтобы был скролинг по горизонтали и не занимал много высоты
     node.style.display = 'flex';
     node.style.overflow = 'auto';
     node.style.height = '130px';
