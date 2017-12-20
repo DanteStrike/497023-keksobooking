@@ -44,8 +44,8 @@
     return mapCardNode;
   };
 
-  //  Поиск индекса активной кнопки относительно массива всех сгенерированных кнопок
-  //  Для определения соответствующей этой кнопке предложения
+  //  Определение соответствующей этой кнопке предложения
+  //  Поиск по ID кнопки в datasets предложений
   var hideCard = function (pinId) {
     var card = document.querySelector('[data-pin=\"' + pinId + '\"]');
     card.style.display = 'none';
