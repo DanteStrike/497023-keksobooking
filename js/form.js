@@ -21,7 +21,7 @@
   var TIMES_OUT = ['12:00', '13:00', '14:00'];
 
   var ROOMS = ['1', '2', '3', '100'];
-  var CAPACITY = ['1', '2', '3', '0'];
+  var CAPACITY = [['1'], ['1', '2'], ['1', '2', '3'], '0'];
 
   var noticeForm = document.querySelector('.notice__form');
   var noticeFormTitleInput = noticeForm.querySelector('#title');
@@ -97,6 +97,16 @@
     element.min = value;
   };
 
+  var syncValueWithOptions = function (element, values) {
+    var elementDomOptions = [].slice.call(element.children);
+    var disableIncorrectOptions = function (option) {
+      values.indexOf(option.value) !== -1 ? option.disabled = false : option.disabled = true;
+    }
+
+    elementDomOptions.forEach(disableIncorrectOptions);
+    element.value = values[0];
+  };
+
   var changeNoticeFormAddressInput = function (coords) {
     noticeFormAddressInput.value = 'x: {' + Math.round(coords.x) + '}, y: {' + Math.round(coords.y) + '}';
   };
@@ -127,7 +137,7 @@
   window.synchronizeFields(noticeFormTimeOutSelect, noticeFormTimeInSelect, TIMES_OUT, TIMES_IN, syncValues);
 
   window.synchronizeFields(noticeFormTypeSelect, noticeFormPriceInput, ROOM_TYPES, PRICE_INPUT_MIN_TYPES, syncValueWithMin);
-  window.synchronizeFields(noticeFormRoomstSelect, noticeFormCapacitySelect, ROOMS, CAPACITY, syncValues);
+  window.synchronizeFields(noticeFormRoomstSelect, noticeFormCapacitySelect, ROOMS, CAPACITY, syncValueWithOptions);
 
   noticeFormPriceInput.addEventListener('invalid', onNoticeFormPriceInputInvalid);
   noticeFormTitleInput.addEventListener('invalid', onNoticeFormTitleInputInvalid);
