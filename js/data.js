@@ -23,6 +23,7 @@
   var OFFER_GUESTS_MIN = 1;
   var OFFER_GUESTS_MAX = 5;
   var OFFER_CHECK_TIMES = ['12:00', '13:00', '14:00'];
+  var OFFER_AVAILABLE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
   //  Функция генерирует случайное целое число в промежутке от min до max
   //  min, max (int)
@@ -104,7 +105,7 @@
       guests: getRandomInt(OFFER_GUESTS_MIN, OFFER_GUESTS_MAX),
       checkin: OFFER_CHECK_TIMES[getRandomInt(0, OFFER_CHECK_TIMES.length)],
       checkout: OFFER_CHECK_TIMES[getRandomInt(0, OFFER_CHECK_TIMES.length)],
-      features: generateRandomArray(window.utility.offerAvailableFeatures, 'random'),
+      features: generateRandomArray(OFFER_AVAILABLE_FEATURES, 'random'),
       description: [],
       photos: []
     };
@@ -119,15 +120,15 @@
 
   //  Функция генерирует массив объектов mapPinCard
   //  count (int) - кол-во чисел (или максимальное число последовательности)
-  //  return arraymapPinCards (object)
-  var generatemapPinCards = function (count) {
+  //  return (object)
+  var generateMapPinCards = function (count) {
     var offerTitles = generateRandomArray(OFFER_TITLES);
     return generateRandomArray(offerTitles, count, function (value, index, random) {
-      return createmapPinCard(random + 1, value);
+      return createMapPinCard(random + 1, value);
     });
   };
 
   window.data = {
-    mapPinCards: generatemapPinCards(MAP_PIN_COUNT),
+    mapPinCards: generateMapPinCards(MAP_PIN_COUNT),
   };
 })();

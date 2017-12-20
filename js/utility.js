@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var OFFER_AVAILABLE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var LIVE_TIME_ERROR_MESSAGE = 1500;
   var DEBOUNCE_INTERVAL = 500; // ms
 

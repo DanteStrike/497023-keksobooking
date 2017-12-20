@@ -1,13 +1,15 @@
 'use strict';
 
 (function () {
+  var OFFER_AVAILABLE_FEATURES_NODES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+
   //  Функция, путем удаления, убирает все недоступные 'удобства' из узла, которых нет в массиве (features)
   //  node (object) - узел содержащий ВСЕ возможные удобства
   //  features (object) - массив текущих удобств
   var buildMapCardFeatures = function (node, features) {
     for (var i = 0; i < window.utility.offerAvailableFeatures.length; i++) {
       if (features.indexOf(window.utility.offerAvailableFeatures[i]) === -1) {
-        node.removeChild(node.querySelector('.feature--' + window.utility.offerAvailableFeatures[i]));
+        node.removeChild(node.querySelector('.feature--' + OFFER_AVAILABLE_FEATURES_NODES[i]));
       }
     }
   };
