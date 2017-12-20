@@ -14,6 +14,30 @@
     }
   };
 
+  var buildMapCardPhotos = function (node, photos) {
+    var fragment = document.createDocumentFragment();
+    photos.forEach(function (photo) {
+      //  Копируем заготовку <li>
+      var ulChildNode = node.children[0].cloneNode(true);
+
+      //  Настраиваем <img> в теге <li>
+      ulChildNode.children[0].src = photo;
+      ulChildNode.children[0].style.width = '100px';
+      ulChildNode.children[0].style.height = '100px';
+      ulChildNode.children[0].style.marginRight = '5px';
+
+      //  Сибираем фрагмент
+      fragment.appendChild(ulChildNode);
+    });
+
+    //  Выставляем настройки списка фото <ul>, что бы был скролинг по горизонтали и не занимал много высоты
+    node.style.display = 'flex';
+    node.style.overflow = 'auto';
+    node.style.height = '130px';
+    node.appendChild(fragment);
+    node.removeChild(node.children[0]);
+  };
+
   //  Функция создает DOM элемент шаблона (template) 'article.map__card', согласно массиву объектов mapPins
   //  mapPin (object) - объект mapPin
   //  return mapCardNode (object) - вернуть узел
@@ -28,6 +52,7 @@
     var mapCardNodeCheckInOut = mapCardNode.querySelector('p:nth-of-type(4)');
     var mapCardNodeFeatures = mapCardNode.querySelector('.popup__features');
     var mapCardNodeDescription = mapCardNode.querySelector('p:last-of-type');
+    var mapCardNodePhotos = mapCardNode.querySelector('.popup__pictures');
 
     mapCardNodeAvatar.src = mapPin.author.avatar;
     mapCardNodeTitle.textContent = mapPin.offer.title;
@@ -38,6 +63,7 @@
     mapCardNodeCheckInOut.textContent = 'Заезд после ' + mapPin.offer.checkin + ', выезд до ' + mapPin.offer.checkout;
     buildMapCardFeatures(mapCardNodeFeatures, mapPin.offer.features);
     mapCardNodeDescription.textContent = mapPin.offer.description;
+    buildMapCardPhotos(mapCardNodePhotos, mapPin.offer.photos);
 
     mapCardNode.style.display = 'none';
 
