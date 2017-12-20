@@ -307,9 +307,6 @@
   //  Инициализация и сборка узлов
   window.backend.load(onMapPinLoad, onMapPinError);
 
-  mapPinsCards = window.data.mapPinCards;
-  renderMapPins(mapPinsCards);
-
   mapFiltersForm.addEventListener('change', onMapFiltersFormChange);
 
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
