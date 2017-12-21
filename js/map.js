@@ -142,14 +142,10 @@
     };
 
     var filterFeatures = function (element) {
-      var entry = true;
       var findEntry = function (feature) {
-        if (element.offer.features.indexOf(feature) === window.utility.NOT_FOUND) {
-          entry = false;
-        }
+        return element.offer.features.indexOf(feature) !== window.utility.NOT_FOUND;
       };
-      features.forEach(findEntry);
-      return entry;
+      return features.every(findEntry);
     };
 
     //  Вывод ближайших к главной кнопке, если в массиве больше эл-ов, чем мы можем отобразить.
