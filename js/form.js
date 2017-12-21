@@ -143,7 +143,7 @@
     var onReaderAvatarLoad = function (evtReader) {
       var reader = evtReader.target;
       noticeFormAvatarPreview.src = reader.result;
-    }
+    };
 
     processUploadedFile(noticeFormAvatarInput, onReaderAvatarLoad);
   };
