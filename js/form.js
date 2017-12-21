@@ -23,6 +23,8 @@
   var ROOMS = ['1', '2', '3', '100'];
   var CAPACITY = [['1'], ['1', '2'], ['1', '2', '3'], '0'];
 
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
   var noticeForm = document.querySelector('.notice__form');
   var noticeFormTitleInput = noticeForm.querySelector('#title');
   var noticeFormAddressInput = noticeForm.querySelector('#address');
@@ -34,6 +36,13 @@
   var noticeFormCapacitySelect = noticeForm.querySelector('#capacity');
 
   var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
+
+  var noticeFormAvatarPreview = noticeForm.querySelector('.notice__preview img');
+  var noticeFormAvatarInput = noticeForm.querySelector('.notice__photo #avatar');
+
+  var noticeFormPhotosContainer = noticeForm.querySelector('.form__photo-container');
+  var noticeFormPhotoUpLoad = noticeFormPhotosContainer.querySelector('.upload');
+  var noticeFormPhotoInput = noticeFormPhotoUpLoad.querySelector('#images');
 
   var onNoticeFormPriceInputInvalid = function (evt) {
     var target = evt.target;
@@ -112,6 +121,51 @@
     syncValueWithOptions(noticeFormCapacitySelect, CAPACITY[0]);
   };
 
+  //  Обработка загруженной фотографии, регулируется callback - onReaderLoad
+  var processUploadedFile = function (inputFileNode, onReaderLoad) {
+    var file = inputFileNode.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var checkFileType = function (type) {
+      return fileName.endsWith(type);
+    };
+
+    var matches = FILE_TYPES.some(checkFileType);
+
+    if (matches) {
+      var reader = new FileReader();
+      reader.addEventListener('load', onReaderLoad);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  var onNoticeFormAvatarInputChange = function () {
+    var onReaderAvatarLoad = function (evtReader) {
+      var reader = evtReader.target;
+      noticeFormAvatarPreview.src = reader.result;
+    }
+
+    processUploadedFile(noticeFormAvatarInput, onReaderAvatarLoad);
+  };
+
+  var onNoticeFormPhotoInputChange = function () {
+    var onReaderPhotoLoad = function (evtReader) {
+      var newPhotoNode = document.createElement('img');
+      var reader = evtReader.target;
+      newPhotoNode.src = reader.result;
+      newPhotoNode.style.width = '130px';
+      newPhotoNode.style.height = '130px';
+      newPhotoNode.style.marginRight = '10px';
+      newPhotoNode.style.marginTop = '5px';
+      noticeFormPhotosContainer.insertBefore(newPhotoNode, noticeFormPhotoUpLoad);
+
+      //  Очистка загруженного Input, для загрузки одинаковых фотографий
+      noticeFormPhotoInput.value = '';
+    };
+
+    processUploadedFile(noticeFormPhotoInput, onReaderPhotoLoad);
+  };
+
   var changeNoticeFormAddressInput = function (coords) {
     noticeFormAddressInput.value = 'x: {' + Math.round(coords.x) + '}, y: {' + Math.round(coords.y) + '}';
   };
@@ -144,8 +198,22 @@
   window.synchronizeFields(noticeFormTypeSelect, noticeFormPriceInput, ROOM_TYPES, PRICE_INPUT_MIN_TYPES, syncValueWithMin);
   window.synchronizeFields(noticeFormRoomstSelect, noticeFormCapacitySelect, ROOMS, CAPACITY, syncValueWithOptions);
 
+  noticeFormAvatarInput.addEventListener('change', onNoticeFormAvatarInputChange);
+
+  //  Формирование контейнера карточной формы
+  noticeFormPhotosContainer.style.display = 'flex';
+  noticeFormPhotosContainer.style.flexWrap = 'wrap';
+  noticeFormPhotosContainer.style.width = 'auto';
+
+  noticeFormPhotoUpLoad.style.width = '130px';
+  noticeFormPhotoUpLoad.style.marginRight = '10px';
+  noticeFormPhotoUpLoad.style.marginTop = '5px';
+
+  noticeFormPhotoInput.addEventListener('change', onNoticeFormPhotoInputChange);
+
   noticeFormPriceInput.addEventListener('invalid', onNoticeFormPriceInputInvalid);
   noticeFormTitleInput.addEventListener('invalid', onNoticeFormTitleInputInvalid);
+
 
   window.form = {
     enableNoticeForm: enableNoticeForm,
