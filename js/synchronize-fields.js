@@ -1,10 +1,10 @@
 'use strict';
 
 (function () {
-  window.synchronizeFields = function (sourseElement, targetElement, sourseData, targetData, collback) {
+  window.synchronizeFields = function (sourseElement, targetElement, sourseData, targetData, callback) {
     sourseElement.addEventListener('change', function () {
       var index = sourseData.indexOf(sourseElement.value);
-      collback(targetElement, targetData[index]);
+      callback(targetElement, targetData[index]);
     });
   };
 })();
