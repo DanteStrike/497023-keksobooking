@@ -143,7 +143,7 @@
 
     var filterFeatures = function (element) {
       var findEntry = function (feature) {
-        return element.offer.features.indexOf(feature) !== window.utility.NOT_FOUND;
+        return element.offer.features.includes(feature);
       };
       return features.every(findEntry);
     };
