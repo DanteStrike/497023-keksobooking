@@ -8,12 +8,7 @@
 
   var PRICE_INPUT_MIN_DEFAULT = 0;
   var PRICE_INPUT_MAX_VALUE = 1000000;
-  var PRICE_INPUT_MIN_TYPES = {
-    'flat': 0,
-    'bungalo': 1000,
-    'house': 5000,
-    'palace': 1000000
-  };
+  var PRICE_INPUT_MIN_TYPES = [0, 1000, 5000, 1000000];
 
   var ROOM_TYPES = ['flat', 'bungalo', 'house', 'palace'];
 
