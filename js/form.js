@@ -179,10 +179,16 @@
     });
   };
 
+  var onNoticeFormReset = function () {
+    //  Сброс минимальной стоимости
+    noticeFormPriceInput.min = PRICE_INPUT_MIN_DEFAULT;
+  };
+
   noticeForm.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(noticeForm), onNoticeFormLoad, onNoticeFormError);
     evt.preventDefault();
   });
+  noticeForm.addEventListener('reset', onNoticeFormReset);
 
   disableNoticeForm();
   initInputsSelectsAttributes();
@@ -208,7 +214,6 @@
 
   noticeFormPriceInput.addEventListener('invalid', onNoticeFormPriceInputInvalid);
   noticeFormTitleInput.addEventListener('invalid', onNoticeFormTitleInputInvalid);
-
 
   window.form = {
     enableNoticeForm: enableNoticeForm,
