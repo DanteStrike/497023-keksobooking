@@ -233,22 +233,11 @@
       document.removeEventListener('mouseup', onPinMainMouseUp);
     };
 
-    var target;
+    var target = evt.currentTarget;
     var targetCoords;
     var mouseStartCoords;
     var mouseTargetPosition;
     var currentTargetCoordsOnMap;
-
-    //  При первоначальном запуске страницы кнопку закрывает svg
-    if (evt.target.parentNode.tagName === 'svg') {
-
-      //  Переключить фокус на main pin button
-      target = evt.target.parentNode.parentNode;
-    } else {
-
-      // После последующих вызовов, переключить фокус, если необходимо. target - img, его родитель button
-      target = evt.target.tagName === 'IMG' ? evt.target.parentNode : evt.target;
-    }
 
     //  Координаты кнопки в нулевой момент
     targetCoords = {

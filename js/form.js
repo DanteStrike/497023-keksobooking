@@ -39,28 +39,28 @@
   var noticeFormPhotoUpLoad = noticeFormPhotosContainer.querySelector('.upload');
   var noticeFormPhotoInput = noticeFormPhotoUpLoad.querySelector('#images');
 
-  var onNoticeFormPriceInputInvalid = function (evt) {
+  var onNoticeFormTitleInputInvalid = function (evt) {
     var target = evt.target;
 
-    if (target.validity.rangeUnderflow) {
-      target.setCustomValidity('Минимальная цена = ' + target.min);
+    if (target.value.length < TITLE_INPUT_MIN_LENGTH) {
+      target.setCustomValidity('Имя должно состоять минимум из ' + TITLE_INPUT_MIN_LENGTH + ' символов');
+    } else if (target.validity.tooLong) {
+      target.setCustomValidity('Имя не должно превышать ' + TITLE_INPUT_MAX_LENGTH + ' символов');
+    } else if (target.validity.valueMissing) {
+      target.setCustomValidity('Обязательное поле');
     } else {
       target.setCustomValidity('');
     }
   };
 
-  var onNoticeFormTitleInputInvalid = function (evt) {
-    //  браузер Edge не поддерживает атрибут minlength
+  var onNoticeFormTitleInputInput = function (evt) {
     var target = evt.target;
 
+    //  браузер Edge не поддерживает атрибут minlength
     if (target.value.length < TITLE_INPUT_MIN_LENGTH) {
       target.setCustomValidity('Имя должно состоять минимум из ' + TITLE_INPUT_MIN_LENGTH + ' символов');
-    } else if (noticeFormTitleInput.validity.tooLong) {
-      noticeFormTitleInput.setCustomValidity('Имя не должно превышать ' + TITLE_INPUT_MAX_LENGTH + ' символов');
-    } else if (noticeFormTitleInput.validity.valueMissing) {
-      noticeFormTitleInput.setCustomValidity('Обязательное поле');
     } else {
-      noticeFormTitleInput.setCustomValidity('');
+      target.setCustomValidity('');
     }
   };
 
@@ -83,6 +83,7 @@
 
   var syncValueWithMin = function (element, value) {
     element.min = value;
+    element.placeholder = element.min;
   };
 
   var syncValueWithOptions = function (element, values) {
@@ -104,15 +105,20 @@
     // Изначально данных атт нет в разметке
     noticeFormTitleInput.required = true;
     noticeFormTitleInput.maxLength = TITLE_INPUT_MAX_LENGTH;
+    noticeFormTitleInput.minLength = TITLE_INPUT_MIN_LENGTH;
 
     noticeFormAddressInput.required = true;
-    noticeFormAddressInput.readOnly = true;
 
     noticeFormPriceInput.required = true;
     noticeFormPriceInput.min = PRICE_INPUT_MIN_DEFAULT;
+    noticeFormPriceInput.placeholder = noticeFormPriceInput.min;
     noticeFormPriceInput.max = PRICE_INPUT_MAX_VALUE;
 
+    noticeFormCapacitySelect.required = true;
+
     //  Начальная синхронизация кол-ва гостей
+    noticeFormCapacitySelect.options[0].removeAttribute('selected');
+    noticeFormCapacitySelect.options[2].setAttribute('selected', '');
     syncValueWithOptions(noticeFormCapacitySelect, CAPACITY[0]);
   };
 
@@ -165,6 +171,21 @@
     noticeFormAddressInput.value = 'x: {' + Math.round(coords.x) + '}, y: {' + Math.round(coords.y) + '}';
   };
 
+  //  Имитация readOnly, чтобы поле было и required и readOnly
+  var onNoticeFormAddressInputKeydown = function (evt) {
+    evt.preventDefault();
+  };
+
+  var onNoticeFormAddressInputInvalid = function (evt) {
+    var target = evt.target;
+
+    if (target.validity.valueMissing) {
+      target.setCustomValidity('Выберите новую точку на карте');
+    } else {
+      target.setCustomValidity('');
+    }
+  };
+
   //  Коллбек-фция при успешной отправке
   var onNoticeFormLoad = function () {
     noticeForm.reset();
@@ -182,6 +203,8 @@
   var onNoticeFormReset = function () {
     //  Сброс минимальной стоимости
     noticeFormPriceInput.min = PRICE_INPUT_MIN_DEFAULT;
+    noticeFormPriceInput.placeholder = noticeFormPriceInput.min;
+    syncValueWithOptions(noticeFormCapacitySelect, CAPACITY[0]);
   };
 
   noticeForm.addEventListener('submit', function (evt) {
@@ -212,8 +235,11 @@
 
   noticeFormPhotoInput.addEventListener('change', onNoticeFormPhotoInputChange);
 
-  noticeFormPriceInput.addEventListener('invalid', onNoticeFormPriceInputInvalid);
+  noticeFormTitleInput.addEventListener('input', onNoticeFormTitleInputInput);
   noticeFormTitleInput.addEventListener('invalid', onNoticeFormTitleInputInvalid);
+
+  noticeFormAddressInput.addEventListener('keydown', onNoticeFormAddressInputKeydown);
+  noticeFormAddressInput.addEventListener('invalid', onNoticeFormAddressInputInvalid);
 
   window.form = {
     enableNoticeForm: enableNoticeForm,
