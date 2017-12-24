@@ -169,6 +169,7 @@
 
   var changeNoticeFormAddressInput = function (coords) {
     noticeFormAddressInput.value = 'x: {' + Math.round(coords.x) + '}, y: {' + Math.round(coords.y) + '}';
+    noticeFormAddressInput.setCustomValidity('');
   };
 
   //  Имитация readOnly, чтобы поле было и required и readOnly
